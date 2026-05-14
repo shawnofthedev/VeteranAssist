@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.ImportDocumentsPage"
+             Title="Import Documents">
+    <VerticalStackLayout Padding="24" Spacing="14">
+        <Label Text="Import Documents" Style="{StaticResource Headline}" />
+        <Label Text="Import DD-214s, service treatment records, VA medical records, private medical records, and scanned PDFs for local processing."
+               LineBreakMode="WordWrap" />
+        <Button Text="Choose Files" IsEnabled="False" />
+        <Label Text="TODO Phase 1: Wire file picker, copy files into protected app storage, hash imports, and write sanitized audit entries."
+               LineBreakMode="WordWrap" />
+    </VerticalStackLayout>
+</ContentPage>

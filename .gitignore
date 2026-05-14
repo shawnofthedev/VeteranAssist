@@ -1,0 +1,96 @@
+# Build output
+bin/
+obj/
+out/
+publish/
+artifacts/
+TestResults/
+coverage/
+coverage.*
+*.trx
+*.coverage
+*.coveragexml
+
+# .NET generated files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+*.snupkg
+project.assets.json
+project.nuget.cache
+*.nuget.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+
+# Visual Studio / MSBuild
+.vs/
+*.vsp
+*.vspx
+*.binlog
+*.ide
+*.cache
+_ReSharper*/
+*.DotSettings.user
+
+# Rider / JetBrains
+.idea/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# MAUI / platform tooling
+**/Platforms/Android/Resources/values/secrets.xml
+**/Platforms/Android/google-services.json
+**/Platforms/iOS/GoogleService-Info.plist
+**/Platforms/MacCatalyst/GoogleService-Info.plist
+*.apk
+*.aab
+*.ipa
+*.appx
+*.msix
+*.msixbundle
+*.appinstaller
+
+# Local app data and sensitive document workspaces
+data/
+imports/
+redacted/
+exports/
+temp/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Secrets and local environment
+.env
+.env.*
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt
+secrets.json
+appsettings.Development.json
+local.settings.json
+
+# Logs and diagnostics
+*.log
+logs/
+crashdumps/
+*.dmp
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store

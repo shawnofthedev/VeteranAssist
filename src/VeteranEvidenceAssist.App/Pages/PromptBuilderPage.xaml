@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.PromptBuilderPage"
+             Title="Prompt Builder">
+    <VerticalStackLayout Padding="24" Spacing="14">
+        <Label Text="Prompt Builder" Style="{StaticResource Headline}" />
+        <Label Text="Build copyable prompts from user-reviewed evidence. The app shows exactly what text would leave the device before the user copies anything."
+               LineBreakMode="WordWrap" />
+        <Editor HeightRequest="220"
+                IsReadOnly="True"
+                Text="Prompt preview will appear here after evidence and a template are selected." />
+        <Button Text="Copy Reviewed Prompt" IsEnabled="False" />
+        <Label Text="TODO Phase 2: Add prompt templates, outgoing text review, clipboard copy confirmation, and optional user-configured providers later."
+               LineBreakMode="WordWrap" />
+    </VerticalStackLayout>
+</ContentPage>

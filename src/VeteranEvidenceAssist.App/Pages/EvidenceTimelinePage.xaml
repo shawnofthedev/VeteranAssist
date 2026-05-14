@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.EvidenceTimelinePage"
+             Title="Evidence Timeline">
+    <VerticalStackLayout Padding="24" Spacing="14">
+        <Label Text="Evidence Timeline" Style="{StaticResource Headline}" />
+        <Label Text="Organize factual evidence with document, page, location, confidence, and extraction timestamp."
+               LineBreakMode="WordWrap" />
+        <Label Text="TODO Phase 2: Add timeline grouping, filters, source navigation, and manual correction support."
+               LineBreakMode="WordWrap" />
+    </VerticalStackLayout>
+</ContentPage>

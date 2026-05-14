@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.DocumentReviewPage"
+             Title="Document Review">
+    <VerticalStackLayout Padding="24" Spacing="14">
+        <Label Text="Document Review" Style="{StaticResource Headline}" />
+        <Label Text="Review imported documents, extracted pages, source references, and local text extraction status."
+               LineBreakMode="WordWrap" />
+        <Label Text="TODO Phase 1: Add document list, page viewer, extraction confidence, and provenance details."
+               LineBreakMode="WordWrap" />
+    </VerticalStackLayout>
+</ContentPage>

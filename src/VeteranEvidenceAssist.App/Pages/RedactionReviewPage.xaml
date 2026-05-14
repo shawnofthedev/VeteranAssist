@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.RedactionReviewPage"
+             Title="Redaction Review">
+    <VerticalStackLayout Padding="24" Spacing="14">
+        <Label Text="Redaction Review" Style="{StaticResource Headline}" />
+        <Label Text="Detected PII must be reviewed and approved before any redacted export is created."
+               LineBreakMode="WordWrap" />
+        <Label Text="TODO Phase 2: Add approve/reject workflow, permanent PDF redaction export, and redaction audit metadata."
+               LineBreakMode="WordWrap" />
+    </VerticalStackLayout>
+</ContentPage>
