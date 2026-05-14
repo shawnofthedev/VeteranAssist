@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using VeteranEvidenceAssist.AI.Services;
 using VeteranEvidenceAssist.Core.Interfaces;
+using VeteranEvidenceAssist.Core.Options;
 using VeteranEvidenceAssist.Documents.Services;
 using VeteranEvidenceAssist.Redaction.Services;
 using VeteranEvidenceAssist.Security.Services;
@@ -27,8 +28,10 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        var databasePath = Path.Combine(FileSystem.AppDataDirectory, "veteran-evidence-assist.db");
+        var workspacePath = Path.Combine(FileSystem.AppDataDirectory, "data");
+        var databasePath = Path.Combine(workspacePath, "veteran-evidence-assist.db");
 
+        builder.Services.AddSingleton(new LocalWorkspaceOptions { WorkspaceRootPath = workspacePath });
         builder.Services.AddSingleton(new LocalStorageOptions { DatabasePath = databasePath });
         builder.Services.AddSingleton<IDocumentImportService, PlaceholderDocumentImportService>();
         builder.Services.AddSingleton<PlaceholderTextExtractionService>();
@@ -38,7 +41,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IRedactionService, PlaceholderRedactionService>();
         builder.Services.AddSingleton<IEvidenceExtractionService, PlaceholderEvidenceExtractionService>();
         builder.Services.AddSingleton<IPromptGenerationService, LocalPromptGenerationService>();
-        builder.Services.AddSingleton<ILocalStorageService, InMemoryLocalStorageService>();
+        builder.Services.AddSingleton<ILocalStorageService, JsonLocalStorageService>();
         builder.Services.AddSingleton<IAuditLogService, InMemoryAuditLogService>();
         builder.Services.AddSingleton<IEncryptionService, PlaceholderEncryptionService>();
 

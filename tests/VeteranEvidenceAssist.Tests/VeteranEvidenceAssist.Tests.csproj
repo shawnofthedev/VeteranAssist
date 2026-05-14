@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\VeteranEvidenceAssist.Core\VeteranEvidenceAssist.Core.csproj" />
+    <ProjectReference Include="..\..\src\VeteranEvidenceAssist.Documents\VeteranEvidenceAssist.Documents.csproj" />
+    <ProjectReference Include="..\..\src\VeteranEvidenceAssist.Storage\VeteranEvidenceAssist.Storage.csproj" />
   </ItemGroup>
 
 </Project>

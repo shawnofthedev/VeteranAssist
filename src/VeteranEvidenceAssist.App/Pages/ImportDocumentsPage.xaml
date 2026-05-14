@@ -7,8 +7,30 @@
         <Label Text="Import Documents" Style="{StaticResource Headline}" />
         <Label Text="Import DD-214s, service treatment records, VA medical records, private medical records, and scanned PDFs for local processing."
                LineBreakMode="WordWrap" />
-        <Button Text="Choose Files" IsEnabled="False" />
-        <Label Text="TODO Phase 1: Wire file picker, copy files into protected app storage, hash imports, and write sanitized audit entries."
+        <Button x:Name="ChooseFilesButton"
+                Text="Choose PDF"
+                Clicked="OnChoosePdfClicked" />
+        <Label x:Name="StatusLabel"
+               Text="No document imported yet."
                LineBreakMode="WordWrap" />
+        <CollectionView x:Name="DocumentsView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,10"
+                          ColumnDefinitions="*,Auto"
+                          RowDefinitions="Auto,Auto">
+                        <Label Text="{Binding OriginalFileName}"
+                               FontAttributes="Bold" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Pages.Count, StringFormat='{0} pages'}" />
+                        <Label Grid.Row="1"
+                               Grid.ColumnSpan="2"
+                               Text="{Binding Sha256Hash}"
+                               FontSize="12"
+                               LineBreakMode="TailTruncation" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>
