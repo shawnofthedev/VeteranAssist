@@ -3,11 +3,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VeteranEvidenceAssist.App.Pages.RedactionReviewPage"
              Title="Redaction Review">
-    <VerticalStackLayout Padding="24" Spacing="14">
-        <Label Text="Redaction Review" Style="{StaticResource Headline}" />
-        <Label Text="Detected PII must be reviewed and approved before any redacted export is created."
-               LineBreakMode="WordWrap" />
-        <Label Text="TODO Phase 2: Add approve/reject workflow, permanent PDF redaction export, and redaction audit metadata."
-               LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Redactions" Style="{StaticResource Headline}" />
+                <Label Text="User-reviewed placeholder workflow for approving or rejecting detected sensitive information before any export."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource DangerCallout}">
+                <Label Text="Export safety warning: visual overlays are not enough. Future redacted PDFs must permanently remove hidden text and flatten the output."
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <Grid ColumnDefinitions="1.4*,2*" ColumnSpacing="18">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Detected PII Suggestions" Style="{StaticResource SectionTitle}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Identifier pattern" Style="{StaticResource CardTitle}" />
+                                <Label Text="Page 1 | Pattern detector | Mock value hidden" Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
+                                <Label Text="92%" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Phone-like text" Style="{StaticResource CardTitle}" />
+                                <Label Text="Page 4 | Pattern detector | Mock value hidden" Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
+                                <Label Text="81%" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Address-like block" Style="{StaticResource CardTitle}" />
+                                <Label Text="Page 7 | Context hint | Mock value hidden" Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
+                                <Label Text="64%" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="16">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Review Selection" Style="{StaticResource SectionTitle}" />
+                                <Label Text="The document preview will show suggested redaction regions after Phase 2 detection is implemented."
+                                       Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="Approve" IsEnabled="False" />
+                            <Button Grid.Column="2" Text="Reject" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                        </Grid>
+
+                        <Border Grid.Row="1"
+                                BackgroundColor="{StaticResource MutedFill}"
+                                Stroke="{StaticResource BorderMuted}"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="24">
+                            <Grid>
+                                <VerticalStackLayout Spacing="12" VerticalOptions="Center">
+                                    <Label Text="Page Preview Placeholder"
+                                           Style="{StaticResource CardTitle}"
+                                           HorizontalTextAlignment="Center" />
+                                    <BoxView HeightRequest="36" WidthRequest="420" Color="#DCE4E3" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="24" WidthRequest="180" Color="{StaticResource DangerFill}" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="36" WidthRequest="500" Color="#DCE4E3" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="24" WidthRequest="260" Color="{StaticResource WarningFill}" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Row="2" Style="{StaticResource WarningCallout}">
+                            <Label Text="Phase 2 TODO: store redaction decisions, audit approval/rejection, and create permanent flattened redacted exports only after user confirmation."
+                                   LineBreakMode="WordWrap" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

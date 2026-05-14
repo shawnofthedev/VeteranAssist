@@ -3,11 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VeteranEvidenceAssist.App.Pages.DocumentReviewPage"
              Title="Document Review">
-    <VerticalStackLayout Padding="24" Spacing="14">
-        <Label Text="Document Review" Style="{StaticResource Headline}" />
-        <Label Text="Review imported documents, extracted pages, source references, and local text extraction status."
-               LineBreakMode="WordWrap" />
-        <Label Text="TODO Phase 1: Add document list, page viewer, extraction confidence, and provenance details."
-               LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+    <Grid Padding="{StaticResource PagePadding}"
+          RowDefinitions="Auto,*"
+          RowSpacing="20">
+        <VerticalStackLayout Spacing="6">
+            <Label Text="Document Review" Style="{StaticResource Headline}" />
+            <Label Text="Split-view wireframe for reading pages, checking local extraction, and preserving source provenance."
+                   Style="{StaticResource SubHeadline}" />
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="2.3*,0.9*"
+              ColumnSpacing="18">
+            <Border Style="{StaticResource Card}">
+                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="14">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Service record packet.pdf" Style="{StaticResource SectionTitle}" />
+                            <Label Text="Page 3 of 18 | Local copy | SHA-256 available in metadata" Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
+                            <Label Text="Embedded text found" Style="{StaticResource MetaText}" />
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="1"
+                            BackgroundColor="{StaticResource MutedFill}"
+                            Stroke="{StaticResource BorderMuted}"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="28">
+                        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="18">
+                            <Label Text="Document Viewer Placeholder"
+                                   Style="{StaticResource CardTitle}"
+                                   HorizontalOptions="Center" />
+                            <VerticalStackLayout Grid.Row="1" Spacing="10" VerticalOptions="Center">
+                                <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="420" HorizontalOptions="Center" />
+                                <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="520" HorizontalOptions="Center" />
+                                <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="460" HorizontalOptions="Center" />
+                                <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="500" HorizontalOptions="Center" />
+                                <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="390" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                            <Label Grid.Row="2"
+                                   Text="Phase 1 TODO: render selected PDF page and link extracted text blocks to source coordinates."
+                                   Style="{StaticResource MetaText}"
+                                   HorizontalTextAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Button Text="Previous" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                        <Slider Grid.Column="1" Minimum="1" Maximum="18" Value="3" IsEnabled="False" />
+                        <Button Grid.Column="2" Text="Next" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="14">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Extracted Text" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Mock extracted paragraph with source page and extraction method visible. The user can compare this against the page before trusting it."
+                               LineBreakMode="WordWrap" />
+                        <Border Style="{StaticResource StatusBadge}" HorizontalOptions="Start">
+                            <Label Text="Confidence: embedded text" Style="{StaticResource MetaText}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Evidence Candidates" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Date-like entry | Page 3 | Needs review" Style="{StaticResource MetaText}" />
+                        <Label Text="Treatment note heading | Page 3 | Needs review" Style="{StaticResource MetaText}" />
+                        <Label Text="Provider name mention | Page 3 | Needs review" Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource WarningCallout}">
+                    <Label Text="No medical or legal conclusions are generated here. This page only helps review source material and user-selected evidence."
+                           LineBreakMode="WordWrap" />
+                </Border>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
 </ContentPage>

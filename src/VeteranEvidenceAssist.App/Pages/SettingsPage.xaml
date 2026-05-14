@@ -3,11 +3,69 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VeteranEvidenceAssist.App.Pages.SettingsPage"
              Title="Settings">
-    <VerticalStackLayout Padding="24" Spacing="14">
-        <Label Text="Settings" Style="{StaticResource Headline}" />
-        <Label Text="Configure local storage, redaction behavior, prompt templates, and future user-supplied AI providers."
-               LineBreakMode="WordWrap" />
-        <Label Text="TODO Phase 1: Use OS credential storage for secrets and require explicit confirmation before any external AI transmission."
-               LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Settings" Style="{StaticResource Headline}" />
+                <Label Text="Placeholder settings for local workspace control, privacy posture, export safety, and future user-configured AI providers."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="18" RowSpacing="18">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Local Workspace" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Storage location" Style="{StaticResource MetaText}" />
+                        <Entry Text="AppData / VeteranEvidenceAssist / data" IsReadOnly="True" />
+                        <Button Text="Change Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                        <Label Text="Phase 1 TODO: show actual workspace path and document storage usage." Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Privacy &amp; Security" Style="{StaticResource SectionTitle}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Require review before external transmission" Style="{StaticResource MetaText}" />
+                            <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Keep imported originals unchanged" Style="{StaticResource MetaText}" />
+                            <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Record security-sensitive audit events" Style="{StaticResource MetaText}" />
+                            <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="AI Providers" Style="{StaticResource SectionTitle}" />
+                        <Label Text="No provider is connected in Phase 0.5. Future providers must be user-configured and require payload approval."
+                               Style="{StaticResource MetaText}" />
+                        <Button Text="Add Provider" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                        <Label Text="Phase 2 TODO: store provider secrets in OS credential storage, never source control." Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Export Preferences" Style="{StaticResource SectionTitle}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Confirm before creating redacted export" Style="{StaticResource MetaText}" />
+                            <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Include source page references in packets" Style="{StaticResource MetaText}" />
+                            <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />
+                        </Grid>
+                        <Label Text="Phase 2 TODO: configure export folders, redaction audit metadata, and reviewed packet formats."
+                               Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.DocumentsPage"
+             Title="Documents">
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Documents" Style="{StaticResource Headline}" />
+                <Label Text="Low-fidelity workspace for selecting PDFs, preserving originals, and tracking local processing status."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource InfoCallout}">
+                <Label Text="Phase 0.5 wireframe: these controls are placeholders. Phase 1 will connect PDF selection, hashing, embedded text extraction, and metadata persistence."
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <Grid ColumnDefinitions="1.3*,2*" ColumnSpacing="18">
+                <VerticalStackLayout Spacing="14">
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Import Queue" Style="{StaticResource SectionTitle}" />
+                            <Label Text="Choose PDFs from this device. Originals remain unchanged and are copied into the local workspace."
+                                   Style="{StaticResource MetaText}" />
+                            <Button Text="Choose PDFs" IsEnabled="False" />
+                            <Button Text="Open Local Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Local Storage" Style="{StaticResource CardTitle}" />
+                            <Label Text="Workspace: AppData / VeteranEvidenceAssist / data" Style="{StaticResource MetaText}" />
+                            <Label Text="Imports: immutable copies" Style="{StaticResource MetaText}" />
+                            <Label Text="Metadata: local index only" Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Imported Documents" Style="{StaticResource SectionTitle}" />
+                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,0,0,8">
+                            <Label Text="Name" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="1" Text="Pages" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="2" Text="Text" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="3" Text="Status" Style="{StaticResource MetaText}" />
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource BorderMuted}" />
+                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
+                            <Label Text="Service record packet.pdf" Style="{StaticResource CardTitle}" />
+                            <Label Grid.Column="1" Text="18" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="2" Text="Embedded" Style="{StaticResource MetaText}" />
+                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
+                                <Label Text="Review" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
+                            <Label Text="Clinic notes scan.pdf" Style="{StaticResource CardTitle}" />
+                            <Label Grid.Column="1" Text="42" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="2" Text="No text" Style="{StaticResource MetaText}" />
+                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
+                                <Label Text="OCR later" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
+                            <Label Text="Private records.pdf" Style="{StaticResource CardTitle}" />
+                            <Label Grid.Column="1" Text="9" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="2" Text="Embedded" Style="{StaticResource MetaText}" />
+                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
+                                <Label Text="Indexed" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

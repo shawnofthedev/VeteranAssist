@@ -4,14 +4,102 @@
              x:Class="VeteranEvidenceAssist.App.Pages.DashboardPage"
              Title="Dashboard">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
             <Label Text="VeteranEvidenceAssist"
                    Style="{StaticResource Headline}"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Label Text="Local-first evidence organizer for sensitive military and medical records."
+            <Label Text="Local-first workspace for organizing sensitive records, reviewing redactions, and preparing user-controlled prompt packets."
                    Style="{StaticResource SubHeadline}" />
-            <Label Text="No documents or extracted text are sent to cloud services by default. Import, redaction review, evidence organization, and prompt copying stay under user control."
-                   LineBreakMode="WordWrap" />
+
+            <Border Style="{StaticResource InfoCallout}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Label Text="Privacy"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Info}" />
+                    <Label Grid.Column="1"
+                           Text="Nothing leaves this device without your review and approval. This wireframe uses mock data only."
+                           LineBreakMode="WordWrap"
+                           TextColor="{StaticResource TextPrimary}" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="14">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Imported documents" Style="{StaticResource CardTitle}" />
+                        <Label Text="12" Style="{StaticResource MetricValue}" />
+                        <Label Text="3 awaiting text review" Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Redaction review" Style="{StaticResource CardTitle}" />
+                        <Label Text="8" Style="{StaticResource MetricValue}" />
+                        <Label Text="Suggested PII items pending" Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Evidence items" Style="{StaticResource CardTitle}" />
+                        <Label Text="24" Style="{StaticResource MetricValue}" />
+                        <Label Text="User-reviewed factual entries" Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="3" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Prompt packets" Style="{StaticResource CardTitle}" />
+                        <Label Text="2" Style="{StaticResource MetricValue}" />
+                        <Label Text="Drafts ready for preview" Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="2*,*" ColumnSpacing="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Workflow" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="8">
+                                <Border Style="{StaticResource StatusBadge}">
+                                    <Label Text="1 Documents" Style="{StaticResource MetaText}" />
+                                </Border>
+                                <Label Text="Import and preserve originals locally." Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                <Border Style="{StaticResource StatusBadge}">
+                                    <Label Text="2 Review" Style="{StaticResource MetaText}" />
+                                </Border>
+                                <Label Text="Check extracted text and source pages." Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="8">
+                                <Border Style="{StaticResource StatusBadge}">
+                                    <Label Text="3 Redact" Style="{StaticResource MetaText}" />
+                                </Border>
+                                <Label Text="Approve or reject every suggestion." Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="3" Spacing="8">
+                                <Border Style="{StaticResource StatusBadge}">
+                                    <Label Text="4 Export" Style="{StaticResource MetaText}" />
+                                </Border>
+                                <Label Text="Create reviewed packets or prompts." Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="12">
+                    <Label Text="Recent Activity" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Mock activity only" Style="{StaticResource CardTitle}" />
+                            <Label Text="PDF imported into local workspace" Style="{StaticResource MetaText}" />
+                            <Label Text="Embedded text review queued" Style="{StaticResource MetaText}" />
+                            <Label Text="Prompt packet draft updated" Style="{StaticResource MetaText}" />
+                            <Label Text="No external transmission recorded" Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

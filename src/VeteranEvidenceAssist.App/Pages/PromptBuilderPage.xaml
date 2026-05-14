@@ -3,15 +3,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VeteranEvidenceAssist.App.Pages.PromptBuilderPage"
              Title="Prompt Builder">
-    <VerticalStackLayout Padding="24" Spacing="14">
-        <Label Text="Prompt Builder" Style="{StaticResource Headline}" />
-        <Label Text="Build copyable prompts from user-reviewed evidence. The app shows exactly what text would leave the device before the user copies anything."
-               LineBreakMode="WordWrap" />
-        <Editor HeightRequest="220"
-                IsReadOnly="True"
-                Text="Prompt preview will appear here after evidence and a template are selected." />
-        <Button Text="Copy Reviewed Prompt" IsEnabled="False" />
-        <Label Text="TODO Phase 2: Add prompt templates, outgoing text review, clipboard copy confirmation, and optional user-configured providers later."
-               LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Prompt Builder" Style="{StaticResource Headline}" />
+                <Label Text="Prepare copyable prompt packets from user-selected, source-linked evidence. No provider calls are made in this wireframe."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource InfoCallout}">
+                <Label Text="You control what leaves the device. Future provider integrations must show the final payload and require explicit approval before transmission."
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <Grid ColumnDefinitions="1.1*,1.4*" ColumnSpacing="18">
+                <VerticalStackLayout Spacing="14">
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Selected Evidence" Style="{StaticResource SectionTitle}" />
+                            <Label Text="Mock source-linked item | Page 3 | User-reviewed" Style="{StaticResource MetaText}" />
+                            <Label Text="Mock source-linked item | Page 8 | User-reviewed" Style="{StaticResource MetaText}" />
+                            <Label Text="Mock source-linked item | Page 12 | Needs review" Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Prompt Template" Style="{StaticResource SectionTitle}" />
+                            <Picker Title="Select template" IsEnabled="False">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Evidence summary packet</x:String>
+                                        <x:String>Question list for appointment</x:String>
+                                        <x:String>Records organization outline</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                            <Label Text="Templates should organize facts and questions without giving claim advice or estimating ratings."
+                                   Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="14">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Final Payload Preview" Style="{StaticResource SectionTitle}" />
+                            <Label Text="The exact text shown here is what the user may copy. Nothing is sent automatically."
+                                   Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
+                        <Editor Grid.Row="1"
+                                HeightRequest="320"
+                                IsReadOnly="True"
+                                Text="Mock prompt preview&#10;&#10;Purpose: organize user-reviewed evidence.&#10;&#10;Included sources: document name, page number, extraction method, and user notes.&#10;&#10;Instructions: summarize only the selected facts. Do not provide legal representation, medical diagnosis, outcome guarantees, or rating estimates." />
+                        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label Text="Phase 2 TODO: add prompt templates, clipboard confirmation, payload preview persistence, and optional user-configured providers."
+                                   Style="{StaticResource MetaText}" />
+                            <Button Grid.Column="1" Text="Copy Prompt" IsEnabled="False" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

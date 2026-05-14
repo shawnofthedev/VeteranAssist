@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VeteranEvidenceAssist.App.Pages.ExportsPage"
+             Title="Exports">
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Exports" Style="{StaticResource Headline}" />
+                <Label Text="Wireframe for reviewed local outputs: redacted copies, evidence packets, and prompt text files."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource WarningCallout}">
+                <Label Text="Redacted exports must permanently remove hidden text and flatten PDF output. Phase 0.5 does not create files."
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Redacted PDF Copy" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Future export after every redaction decision is reviewed and approved."
+                               Style="{StaticResource MetaText}" />
+                        <Button Text="Prepare Redacted Copy" IsEnabled="False" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Evidence Packet" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Source-linked factual entries with document names, page numbers, and review status."
+                               Style="{StaticResource MetaText}" />
+                        <Button Text="Prepare Packet" IsEnabled="False" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Prompt Text" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Reviewed copyable text. User controls whether it is copied or sent elsewhere."
+                               Style="{StaticResource MetaText}" />
+                        <Button Text="Prepare Prompt File" IsEnabled="False" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Export History Placeholder" Style="{StaticResource SectionTitle}" />
+                    <Grid ColumnDefinitions="*,*,*,*" Padding="0,0,0,8">
+                        <Label Text="Type" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="1" Text="Status" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="2" Text="Location" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="3" Text="Audit" Style="{StaticResource MetaText}" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource BorderMuted}" />
+                    <Grid ColumnDefinitions="*,*,*,*" Padding="0,8">
+                        <Label Text="Redacted PDF" Style="{StaticResource CardTitle}" />
+                        <Label Grid.Column="1" Text="Not available" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="2" Text="Local exports folder" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="3" Text="Required" Style="{StaticResource MetaText}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*,*" Padding="0,8">
+                        <Label Text="Evidence packet" Style="{StaticResource CardTitle}" />
+                        <Label Grid.Column="1" Text="Draft" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="2" Text="Local exports folder" Style="{StaticResource MetaText}" />
+                        <Label Grid.Column="3" Text="Planned" Style="{StaticResource MetaText}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

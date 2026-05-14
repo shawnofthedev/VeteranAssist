@@ -3,11 +3,72 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VeteranEvidenceAssist.App.Pages.EvidenceTimelinePage"
              Title="Evidence Timeline">
-    <VerticalStackLayout Padding="24" Spacing="14">
-        <Label Text="Evidence Timeline" Style="{StaticResource Headline}" />
-        <Label Text="Organize factual evidence with document, page, location, confidence, and extraction timestamp."
-               LineBreakMode="WordWrap" />
-        <Label Text="TODO Phase 2: Add timeline grouping, filters, source navigation, and manual correction support."
-               LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Evidence Timeline" Style="{StaticResource Headline}" />
+                <Label Text="Wireframe for organizing factual, source-linked entries separately from any user-created summaries."
+                       Style="{StaticResource SubHeadline}" />
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="10">
+                <Border Style="{StaticResource StatusBadge}">
+                    <Label Text="All evidence" Style="{StaticResource MetaText}" />
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
+                    <Label Text="Needs review" Style="{StaticResource MetaText}" />
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource StatusBadge}">
+                    <Label Text="Source verified" Style="{StaticResource MetaText}" />
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="220,*" ColumnSpacing="18">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Filters" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Document type" Style="{StaticResource MetaText}" />
+                        <Picker Title="All documents" IsEnabled="False" />
+                        <Label Text="Date range" Style="{StaticResource MetaText}" />
+                        <DatePicker IsEnabled="False" />
+                        <Label Text="Confidence" Style="{StaticResource MetaText}" />
+                        <Slider Minimum="0" Maximum="1" Value="0.7" IsEnabled="False" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="12">
+                    <Border Style="{StaticResource Card}">
+                        <Grid ColumnDefinitions="120,*,Auto" ColumnSpacing="16">
+                            <Label Text="2018" Style="{StaticResource MetricValue}" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Mock factual event from source document" Style="{StaticResource CardTitle}" />
+                                <Label Text="Source: Service record packet.pdf | Page 3 | Extracted locally | User review pending"
+                                       Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="2" Style="{StaticResource StatusBadge}">
+                                <Label Text="Needs review" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <Grid ColumnDefinitions="120,*,Auto" ColumnSpacing="16">
+                            <Label Text="2020" Style="{StaticResource MetricValue}" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Mock appointment or record entry" Style="{StaticResource CardTitle}" />
+                                <Label Text="Source: Private records.pdf | Page 8 | Confidence shown for extraction only"
+                                       Style="{StaticResource MetaText}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="2" Style="{StaticResource StatusBadge}">
+                                <Label Text="Verified" Style="{StaticResource MetaText}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource InfoCallout}">
+                        <Label Text="Phase 2 TODO: add timeline grouping, source navigation, provenance details, and manual correction. AI-generated summaries must remain separate from extracted facts."
+                               LineBreakMode="WordWrap" />
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

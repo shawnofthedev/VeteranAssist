@@ -12,19 +12,19 @@
         Route="dashboard" />
 
     <ShellContent
-        Title="Import Documents"
-        ContentTemplate="{DataTemplate pages:ImportDocumentsPage}"
-        Route="import-documents" />
+        Title="Documents"
+        ContentTemplate="{DataTemplate pages:DocumentsPage}"
+        Route="documents" />
 
     <ShellContent
-        Title="Document Review"
+        Title="Review"
         ContentTemplate="{DataTemplate pages:DocumentReviewPage}"
         Route="document-review" />
 
     <ShellContent
-        Title="Redaction Review"
+        Title="Redactions"
         ContentTemplate="{DataTemplate pages:RedactionReviewPage}"
-        Route="redaction-review" />
+        Route="redactions" />
 
     <ShellContent
         Title="Evidence Timeline"
@@ -35,6 +35,11 @@
         Title="Prompt Builder"
         ContentTemplate="{DataTemplate pages:PromptBuilderPage}"
         Route="prompt-builder" />
+
+    <ShellContent
+        Title="Exports"
+        ContentTemplate="{DataTemplate pages:ExportsPage}"
+        Route="exports" />
 
     <ShellContent
         Title="Settings"
