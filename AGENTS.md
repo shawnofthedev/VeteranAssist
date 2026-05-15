@@ -254,3 +254,66 @@ AI contributors should:
 
 When uncertain:
 prefer privacy, transparency, and user control.
+
+---
+
+# AI Continuity Rules
+
+These rules keep future AI-assisted sessions grounded in engineering state rather than long conversation history.
+
+## Before Starting New Work
+
+Read:
+
+- `AGENTS.md`
+- `README.md`
+- `docs/ai-context/SESSION_STATE.md`
+- `docs/ai-context/REPO_MAP.md`
+- relevant ADRs in `docs/adr/`
+
+Also read the docs directly relevant to the requested work:
+
+- `docs/architecture.md`
+- `docs/security.md`
+- `docs/redaction-spec.md`
+- `docs/project-setup.md`
+
+## When Completing Meaningful Work
+
+Update or create:
+
+- `docs/ai-context/SESSION_STATE.md`
+- `docs/ai-context/REPO_MAP.md` when repository structure, workflows, or important files change
+- `docs/adr/xxxx-title.md` when an architectural, privacy, storage, provider, redaction, or security decision is made
+
+Use lowercase, zero-padded ADR filenames like:
+
+```text
+docs/adr/0007-example-title.md
+```
+
+## What To Capture
+
+Do not create long conversation summaries. Capture engineering state only:
+
+- what changed
+- current branch/focus
+- known issues
+- next recommended tasks
+- important decisions
+- verification performed
+- relevant files touched
+
+## What Not To Capture
+
+Do not include:
+
+- raw document contents
+- PII
+- medical details from user records
+- secrets or API keys
+- long chat transcripts
+- speculative product promises
+
+When uncertain, preserve concise state that helps the next contributor continue safely.
+
