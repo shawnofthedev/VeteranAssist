@@ -51,16 +51,46 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
             ContainsSensitiveInformation = true
         };
 
-        var textBlocks = await _textExtractionService.ExtractTextAsync(document, cancellationToken);
+        IReadOnlyList<ExtractedTextBlock> textBlocks;
+        try
+        {
+            textBlocks = await _textExtractionService.ExtractTextAsync(document, cancellationToken);
+        }
+        catch
+        {
+            File.Delete(localFilePath);
+            throw;
+        }
+
         foreach (var block in textBlocks)
         {
             var page = document.Pages.FirstOrDefault(page => page.Id == block.DocumentPageId);
             page?.TextBlocks.Add(block);
         }
 
+        document.ExtractedTextCharacterCount = document.Pages
+            .SelectMany(page => page.TextBlocks)
+            .Sum(block => block.Text.Length);
+        document.ExtractionStatus = DetermineExtractionStatus(document);
+
         await _localStorageService.SaveDocumentAsync(document, cancellationToken);
 
         return document;
+    }
+
+    private static DocumentExtractionStatus DetermineExtractionStatus(VeteranDocument document)
+    {
+        if (document.Pages.Count == 0)
+        {
+            return DocumentExtractionStatus.Unknown;
+        }
+
+        if (document.ExtractedTextCharacterCount >= 10)
+        {
+            return DocumentExtractionStatus.EmbeddedTextExtracted;
+        }
+
+        return DocumentExtractionStatus.OcrNeeded;
     }
 
     private static void ValidateImport(string filePath)

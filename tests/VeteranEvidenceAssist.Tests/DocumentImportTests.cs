@@ -3,6 +3,7 @@ using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Core;
 using UglyToad.PdfPig.Fonts.Standard14Fonts;
 using UglyToad.PdfPig.Writer;
+using VeteranEvidenceAssist.Core.Enums;
 using VeteranEvidenceAssist.Core.Models;
 using VeteranEvidenceAssist.Core.Options;
 using VeteranEvidenceAssist.Documents.Services;
@@ -32,6 +33,8 @@ public sealed class DocumentImportTests
         await using var stream = File.OpenRead(document.LocalFilePath);
         var expectedHash = Convert.ToHexString(await SHA256.HashDataAsync(stream));
         Assert.Equal(expectedHash, document.Sha256Hash);
+        Assert.Equal(DocumentExtractionStatus.EmbeddedTextExtracted, document.ExtractionStatus);
+        Assert.True(document.ExtractedTextCharacterCount > 0);
         Assert.Contains(document.Pages, page => page.TextBlocks.Any(block => block.Text.Contains("Local import test", StringComparison.Ordinal)));
     }
 
@@ -97,6 +100,8 @@ public sealed class DocumentImportTests
 
         var documents = await storage.ListDocumentsAsync();
         Assert.Empty(documents);
+        Assert.False(Directory.Exists(workspace.Options.ImportsDirectoryPath) &&
+                     Directory.EnumerateFiles(workspace.Options.ImportsDirectoryPath).Any());
     }
 
     [Fact]
@@ -152,6 +157,8 @@ public sealed class DocumentImportTests
         var savedBlock = Assert.Single(savedDocument.Pages.SelectMany(page => page.TextBlocks));
         Assert.Contains("Local import test", savedBlock.Text, StringComparison.Ordinal);
         Assert.Contains(savedDocument.Pages, page => page.PageNumber == 1);
+        Assert.Equal(DocumentExtractionStatus.EmbeddedTextExtracted, savedDocument.ExtractionStatus);
+        Assert.True(savedDocument.ExtractedTextCharacterCount > 0);
     }
 
     [Fact]
@@ -195,6 +202,20 @@ public sealed class DocumentImportTests
 
         var extractedText = string.Join(Environment.NewLine, document.Pages.SelectMany(page => page.TextBlocks).Select(block => block.Text));
         Assert.Contains("Local import test", extractedText, StringComparison.Ordinal);
+        Assert.Equal(DocumentExtractionStatus.EmbeddedTextExtracted, document.ExtractionStatus);
+    }
+
+    [Fact]
+    public async Task Text_based_pdf_is_marked_embedded_text_extracted()
+    {
+        using var workspace = TestWorkspace.Create();
+        var sourcePdf = workspace.WriteMinimalPdf("status.pdf");
+        var importer = CreateImporter(new JsonLocalStorageService(workspace.Options), workspace.Options);
+
+        var document = await importer.ImportAsync(sourcePdf);
+
+        Assert.Equal(DocumentExtractionStatus.EmbeddedTextExtracted, document.ExtractionStatus);
+        Assert.False(document.ExtractedTextCharacterCount == 0);
     }
 
     [Fact]
@@ -210,6 +231,22 @@ public sealed class DocumentImportTests
         var page = Assert.Single(document.Pages);
         Assert.Equal(1, page.PageNumber);
         Assert.Empty(page.TextBlocks);
+        Assert.Equal(DocumentExtractionStatus.OcrNeeded, document.ExtractionStatus);
+        Assert.Equal(0, document.ExtractedTextCharacterCount);
+    }
+
+    [Fact]
+    public async Task Scanned_or_no_text_pdf_is_marked_ocr_needed()
+    {
+        using var workspace = TestWorkspace.Create();
+        var sourcePdf = workspace.WriteBlankPdf("needs-ocr.pdf");
+        var importer = CreateImporter(new JsonLocalStorageService(workspace.Options), workspace.Options);
+
+        var document = await importer.ImportAsync(sourcePdf);
+
+        Assert.Equal(DocumentExtractionStatus.OcrNeeded, document.ExtractionStatus);
+        Assert.NotEmpty(document.Pages);
+        Assert.Empty(document.Pages.SelectMany(page => page.TextBlocks));
     }
 
     [Fact]

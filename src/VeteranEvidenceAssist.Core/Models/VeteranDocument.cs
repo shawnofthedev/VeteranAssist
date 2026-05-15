@@ -10,6 +10,8 @@ public sealed class VeteranDocument
     public DocumentType DocumentType { get; set; } = DocumentType.Unknown;
     public string Sha256Hash { get; set; } = string.Empty;
     public DateTimeOffset ImportedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DocumentExtractionStatus ExtractionStatus { get; set; } = DocumentExtractionStatus.Unknown;
+    public int ExtractedTextCharacterCount { get; set; }
     public bool ContainsSensitiveInformation { get; set; } = true;
     public List<DocumentPage> Pages { get; init; } = [];
 }

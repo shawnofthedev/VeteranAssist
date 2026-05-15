@@ -61,6 +61,10 @@
             <VerticalStackLayout Grid.Column="1" Spacing="14">
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
+                        <Border x:Name="OcrNeededWarning" Style="{StaticResource WarningCallout}" IsVisible="False">
+                            <Label Text="This PDF appears to have little or no embedded text. OCR is not implemented yet, so scanned content may not be searchable in this phase."
+                                   LineBreakMode="WordWrap" />
+                        </Border>
                         <Label Text="Extracted Text" Style="{StaticResource SectionTitle}" />
                         <CollectionView x:Name="ExtractedTextCollection"
                                         EmptyView="No embedded text is available for this document. OCR is not implemented yet.">

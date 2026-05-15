@@ -64,17 +64,19 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj
 
 ## Current Development Phase
 
-Current phase: Phase 0.5 UX/Wireframes with Phase 1 local import/text extraction groundwork.
+Current phase: Phase 1 Local Document Intake.
 
 Implemented at this stage:
 
 - MAUI Shell navigation foundation.
-- Privacy-first wireframe pages for the major workflows.
+- Privacy-first workflow pages for the major document intake and review flows.
 - Shared color, spacing, typography, card, badge, and callout styles.
-- Local PDF import service groundwork.
+- Local PDF import service.
 - SHA-256 hashing for imported files.
 - JSON metadata persistence.
 - Embedded PDF text extraction when available.
+- OCR-needed status detection for PDFs with little or no embedded text.
+- Document detail/review workflow with metadata, extraction status, and extracted text preview.
 - Tests for domain models and local import behavior.
 
 Not implemented yet:
@@ -100,6 +102,8 @@ data/
 ```
 
 Current metadata persistence is JSON-backed for early development. The architecture docs still identify SQLite/EF Core as the intended later storage direction once the model stabilizes.
+
+Phase 1 extraction status is persisted with document metadata. Text-based PDFs are marked as embedded-text extracted, while PDFs with little or no embedded text are marked as OCR-needed. OCR itself is intentionally deferred.
 
 ## Solution Creation Reference
 

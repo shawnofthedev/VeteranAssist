@@ -1,5 +1,6 @@
 using VeteranEvidenceAssist.Core.Interfaces;
 using VeteranEvidenceAssist.Core.Models;
+using VeteranEvidenceAssist.Core.Enums;
 
 namespace VeteranEvidenceAssist.App.Pages;
 
@@ -117,9 +118,21 @@ public partial class DocumentsPage : ContentPage
                 document.Id,
                 document.OriginalFileName,
                 document.Pages.Count,
-                textBlockCount > 0 ? "Embedded" : "No embedded text",
+                ToDisplayStatus(document, textBlockCount),
                 shortHash,
                 document.ImportedAt.ToLocalTime().ToString("g"));
+        }
+
+        private static string ToDisplayStatus(VeteranDocument document, int textBlockCount)
+        {
+            return document.ExtractionStatus switch
+            {
+                DocumentExtractionStatus.EmbeddedTextExtracted => "Embedded",
+                DocumentExtractionStatus.OcrNeeded => "OCR needed",
+                DocumentExtractionStatus.NoTextFound => "No text",
+                DocumentExtractionStatus.ExtractionFailed => "Failed",
+                _ => textBlockCount > 0 ? "Embedded" : "Unknown"
+            };
         }
     }
 }

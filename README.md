@@ -29,19 +29,20 @@ Current UI messaging makes the core promise visible: nothing leaves this device 
 
 ## Current Status
 
-Current development phase: Phase 0.5 UX/Wireframes with initial Phase 1 local import/text extraction groundwork present.
+Current development phase: Phase 1 Local Document Intake.
 
-The application currently has a low-fidelity MAUI UI foundation for the main workflows and a local-only document import service capable of copying PDFs into a workspace, hashing imported files, persisting metadata, and extracting embedded PDF text when present.
+The application currently has a MAUI workflow for selecting local PDFs, copying them into the app workspace, hashing imported copies, persisting metadata, extracting embedded PDF text when present, and reviewing document details locally.
 
-OCR, true redaction, export generation, claim-specific recommendations, and cloud AI provider calls are not implemented.
+PDFs with little or no embedded text are marked as OCR-needed for a future phase. OCR, true redaction, export generation, claim-specific recommendations, and cloud AI provider calls are not implemented.
 
 ## Features Implemented
 
 - .NET 9 / .NET MAUI Windows desktop solution.
 - Shell navigation for Dashboard, Documents, Review, Redactions, Evidence Timeline, Prompt Builder, Exports, and Settings.
 - Lightweight design system with color tokens, spacing, typography, cards, badges, and callouts.
-- Privacy-first wireframe pages using mock data and clear local-control messaging.
-- Split document review wireframe with viewer placeholder and extracted text side panel.
+- Privacy-first workflow pages with clear local-control messaging.
+- Documents page import workflow for local PDF selection.
+- Split document review page with document metadata, extraction status, OCR-needed warning, and extracted text preview.
 - Redaction review wireframe with mock PII suggestions, confidence indicators, approve/reject placeholders, and export safety warning.
 - Prompt builder wireframe with selected evidence, template selector placeholder, payload preview, and copy prompt placeholder.
 - Settings wireframe for local workspace, privacy/security, AI providers, and export preferences.
@@ -51,7 +52,8 @@ OCR, true redaction, export generation, claim-specific recommendations, and clou
   - SHA-256 file hashing.
   - JSON metadata persistence.
   - Embedded PDF text extraction with PdfPig.
-- Unit tests for file hashing, import validation, metadata persistence, and core domain behavior.
+  - OCR-needed status for PDFs with little or no embedded text.
+- Unit tests for file hashing, import validation, original-file immutability, duplicate import behavior, metadata persistence, extraction status, no-text PDF detection, and core domain behavior.
 
 ## Planned Roadmap
 
@@ -59,7 +61,7 @@ Phase 0: Project scaffold and core domain contracts.
 
 Phase 0.5: UX/wireframe foundation, navigation, design tokens, workflow clarity, and privacy messaging.
 
-Phase 1: Stable local document import, PDF handling, file hashing, metadata persistence, and embedded PDF text extraction.
+Phase 1: Stable local document import, PDF handling, file hashing, metadata persistence, embedded PDF text extraction, OCR-needed detection, and document detail review.
 
 Phase 2: Local OCR, safer extraction confidence handling, evidence review workflows, and source navigation.
 
@@ -127,6 +129,12 @@ Run tests:
 
 ```powershell
 dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj
+```
+
+Run tests without rebuilding after a successful build:
+
+```powershell
+dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-build
 ```
 
 Build the app project directly:
