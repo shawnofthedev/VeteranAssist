@@ -79,6 +79,7 @@ Implemented at this stage:
 - OCR-needed status detection for PDFs with little or no embedded text.
 - Document detail/review workflow with metadata, extraction status, and extracted text preview.
 - Hash-based duplicate import reuse.
+- Local app appearance preference with Light, Dark, and System Default modes.
 - Tests for domain models and local import behavior.
 
 Not implemented yet:

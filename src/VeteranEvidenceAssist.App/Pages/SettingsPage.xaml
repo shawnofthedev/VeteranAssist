@@ -7,11 +7,11 @@
         <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
             <VerticalStackLayout Spacing="6">
                 <Label Text="Settings" Style="{StaticResource Headline}" />
-                <Label Text="Placeholder settings for local workspace control, privacy posture, export safety, and future user-configured AI providers."
+                <Label Text="Local workspace control, appearance, privacy posture, export safety, and future user-configured AI providers."
                        Style="{StaticResource SubHeadline}" />
             </VerticalStackLayout>
 
-            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="18" RowSpacing="18">
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="18" RowSpacing="18">
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Local Workspace" Style="{StaticResource SectionTitle}" />
@@ -40,6 +40,18 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Appearance" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Theme" Style="{StaticResource MetaText}" />
+                        <Picker x:Name="AppearancePicker"
+                                Title="Choose appearance"
+                                SelectedIndexChanged="OnAppearanceSelectionChanged" />
+                        <Label Text="System Default follows the operating system theme."
+                               Style="{StaticResource MetaText}" />
+                    </VerticalStackLayout>
+                </Border>
+
                 <Border Grid.Row="1" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="AI Providers" Style="{StaticResource SectionTitle}" />
@@ -50,7 +62,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+                <Border Grid.Row="2" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Export Preferences" Style="{StaticResource SectionTitle}" />
                         <Grid ColumnDefinitions="*,Auto">

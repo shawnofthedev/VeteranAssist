@@ -108,6 +108,7 @@ src/VeteranEvidenceAssist.App/
   GlobalUsings.cs
   Pages/
   Resources/Styles/
+  Services/
   ViewModels/
 ```
 
@@ -135,6 +136,13 @@ Current active document intake flow:
 - `DocumentReviewPage.xaml`
 - `DocumentReviewPage.xaml.cs`
 - `ViewModels/DocumentDetailViewModel.cs`
+- `Services/AppearanceSettingsService.cs`
+
+Settings:
+
+- `SettingsPage.xaml` includes local workspace, privacy/security, appearance, AI provider, and export preference sections.
+- Appearance supports Light, Dark, and System Default modes and is persisted locally with MAUI `Preferences`.
+- `App.xaml.cs` applies the saved appearance mode on startup through `Application.Current.UserAppTheme`.
 
 Notes:
 

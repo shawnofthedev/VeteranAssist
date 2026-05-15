@@ -1,6 +1,6 @@
 # SESSION_STATE
 
-Last updated: 2026-05-14
+Last updated: 2026-05-15
 
 ## Project
 
@@ -118,11 +118,17 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Shows OCR-needed warning when status is `OcrNeeded`.
   - PDF rendering is still a placeholder.
 - Added `DocumentDetailViewModel` in App for review-page projection.
+- Added app appearance settings:
+  - `AppearanceSettingsService` persists the selected mode with MAUI `Preferences`.
+  - Supported modes are Light, Dark, and System Default.
+  - Startup applies the saved mode through `Application.Current.UserAppTheme`.
+  - Settings page includes an Appearance section with a theme picker.
+  - Shared styles use theme-aware resources for cards, text, badges, callouts, and related placeholders.
 
 ### Docs
 
 - `README.md` updated for Phase 1 status, privacy statement, non-goals, setup/build/test commands, roadmap, architecture, and screenshots placeholders.
-- `docs/project-setup.md` updated for current solution layout, Phase 1 status, workspace notes, and commands.
+- `docs/project-setup.md` updated for current solution layout, Phase 1 status, workspace notes, appearance setting, and commands.
 
 ## Tests
 
@@ -152,6 +158,11 @@ Covered behaviors include:
 - Repository lookup by SHA-256 hash.
 - Synthetic extraction failure cleanup/no partial metadata persistence.
 
+Latest verification:
+
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after adding appearance settings.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 21 tests.
+
 Useful commands:
 
 ```powershell
@@ -176,6 +187,7 @@ This compile check passed after the latest changes. It may leave generated build
 - Redaction/export workflows are still placeholders.
 - Storage is JSON-backed and not encrypted; future work should revisit SQLite and encryption.
 - `ImportDocumentsPage` still exists from earlier work but the active Shell route uses `DocumentsPage`.
+- Appearance preference is low-sensitivity UI state stored with MAUI `Preferences`, not encrypted storage.
 
 ## Suggested Next Steps
 
@@ -205,5 +217,9 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.App/Pages/DocumentsPage.xaml.cs`
 - `src/VeteranEvidenceAssist.App/Pages/DocumentReviewPage.xaml`
 - `src/VeteranEvidenceAssist.App/Pages/DocumentReviewPage.xaml.cs`
+- `src/VeteranEvidenceAssist.App/Pages/SettingsPage.xaml`
+- `src/VeteranEvidenceAssist.App/Pages/SettingsPage.xaml.cs`
+- `src/VeteranEvidenceAssist.App/Services/AppearanceSettingsService.cs`
+- `src/VeteranEvidenceAssist.App/Resources/Styles/Styles.xaml`
 - `src/VeteranEvidenceAssist.App/ViewModels/DocumentDetailViewModel.cs`
 - `tests/VeteranEvidenceAssist.Tests/DocumentImportTests.cs`

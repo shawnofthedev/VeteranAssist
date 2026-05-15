@@ -63,8 +63,8 @@
                         </Grid>
 
                         <Border Grid.Row="1"
-                                BackgroundColor="{StaticResource MutedFill}"
-                                Stroke="{StaticResource BorderMuted}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource MutedFill}, Dark={StaticResource Gray600}}"
+                                Stroke="{AppThemeBinding Light={StaticResource BorderMuted}, Dark={StaticResource Gray500}}"
                                 StrokeShape="RoundRectangle 8"
                                 Padding="24">
                             <Grid>
@@ -72,10 +72,10 @@
                                     <Label Text="Page Preview Placeholder"
                                            Style="{StaticResource CardTitle}"
                                            HorizontalTextAlignment="Center" />
-                                    <BoxView HeightRequest="36" WidthRequest="420" Color="#DCE4E3" HorizontalOptions="Center" />
-                                    <BoxView HeightRequest="24" WidthRequest="180" Color="{StaticResource DangerFill}" HorizontalOptions="Center" />
-                                    <BoxView HeightRequest="36" WidthRequest="500" Color="#DCE4E3" HorizontalOptions="Center" />
-                                    <BoxView HeightRequest="24" WidthRequest="260" Color="{StaticResource WarningFill}" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="36" WidthRequest="420" Color="{AppThemeBinding Light={StaticResource BorderMuted}, Dark={StaticResource Gray500}}" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="24" WidthRequest="180" Color="{AppThemeBinding Light={StaticResource DangerFill}, Dark={StaticResource Danger}}" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="36" WidthRequest="500" Color="{AppThemeBinding Light={StaticResource BorderMuted}, Dark={StaticResource Gray500}}" HorizontalOptions="Center" />
+                                    <BoxView HeightRequest="24" WidthRequest="260" Color="{AppThemeBinding Light={StaticResource WarningFill}, Dark={StaticResource Warning}}" HorizontalOptions="Center" />
                                 </VerticalStackLayout>
                             </Grid>
                         </Border>

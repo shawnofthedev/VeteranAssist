@@ -46,6 +46,7 @@ PDFs with little or no embedded text are marked as OCR-needed for a future phase
 - Redaction review wireframe with mock PII suggestions, confidence indicators, approve/reject placeholders, and export safety warning.
 - Prompt builder wireframe with selected evidence, template selector placeholder, payload preview, and copy prompt placeholder.
 - Settings wireframe for local workspace, privacy/security, AI providers, and export preferences.
+- Appearance setting for Light, Dark, and System Default themes persisted locally with MAUI preferences.
 - Local PDF import service groundwork:
   - PDF path validation.
   - Copies imported files into `AppData/Documents/{DocumentId}/original.pdf` in the app-managed local workspace.
