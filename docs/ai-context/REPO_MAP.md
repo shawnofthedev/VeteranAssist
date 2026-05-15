@@ -62,6 +62,7 @@ docs/adr/
   0005-defer-ocr-until-after-local-intake.md
   0006-defer-redaction-and-export.md
   0007-hash-based-duplicate-import-reuse.md
+  0008-document-repository-and-workspace-layout.md
 ```
 
 Use ADRs to understand why major decisions were made.
@@ -182,6 +183,7 @@ Enums/TextExtractionMethod.cs
 Interfaces/IDocumentImportService.cs
 Interfaces/ITextExtractionService.cs
 Interfaces/ILocalStorageService.cs
+Interfaces/IDocumentRepository.cs
 Interfaces/IFileHashService.cs
 Options/LocalWorkspaceOptions.cs
 ```
@@ -190,6 +192,9 @@ Current Phase 1 metadata:
 
 - `VeteranDocument.ExtractionStatus`
 - `VeteranDocument.ExtractedTextCharacterCount`
+- `VeteranDocument.RequiresOcr`
+- `VeteranDocument.ExtractedTextPreview`
+- `VeteranDocument.RedactionStatus`
 - `DocumentPage.PageNumber`
 - `ExtractedTextBlock.DocumentPageId`
 - `ExtractedTextBlock.ExtractionMethod`
@@ -220,19 +225,19 @@ VeteranEvidenceAssist.Documents.csproj
 Current behavior:
 
 - Validates PDF input.
-- Copies file into local workspace under `imports`.
+- Copies file into local workspace under `Documents/{DocumentId}/original.pdf`.
 - Uses `IFileHashService` for SHA-256 hashing.
 - Uses PdfPig for embedded PDF text extraction.
 - Creates page metadata and extracted text blocks.
 - Marks text-based PDFs as `EmbeddedTextExtracted`.
 - Marks no-text/scanned-like PDFs as `OcrNeeded`.
-- Reuses an existing import when a selected PDF has the same SHA-256 hash and the workspace copy still exists.
+- Reuses an existing import through `IDocumentRepository.FindBySha256HashAsync` when a selected PDF has the same SHA-256 hash and the workspace copy still exists.
 - Does not OCR.
 - Does not upload anything.
 
 Note:
 
-Service names still include `Placeholder` but contain real Phase 1 behavior. A future cleanup should rename them.
+`LocalDocumentImportService` is the active import service. `PlaceholderDocumentImportService` remains as a compatibility wrapper in the same file. `PlaceholderTextExtractionService` should be renamed in a future cleanup.
 
 ## Storage Project
 
@@ -407,7 +412,7 @@ Suggested structure:
 
 ```text
 data/
-  imports/
+  Documents/
   metadata/
   redacted/
   exports/
@@ -416,7 +421,7 @@ data/
 
 Current Phase 1 usage:
 
-- `imports/`: copied PDFs.
+- `AppData/Documents/{DocumentId}/original.pdf`: copied PDFs.
 - `metadata/`: JSON document metadata.
 
 Original files must remain unchanged.
@@ -439,7 +444,7 @@ User chooses PDFs
   -> Validate PDF
   -> Hash selected file locally
   -> Reuse existing record if hash already exists with a valid workspace copy
-  -> Copy into workspace/imports
+  -> Copy into AppData/Documents/{DocumentId}/original.pdf
   -> Hash copied file for persisted metadata
   -> Extract embedded text locally
   -> Determine extraction status
@@ -460,7 +465,7 @@ Flow:
 ```text
 User selects imported document
   -> Shell navigates to document-review with documentId
-  -> Load document metadata from ILocalStorageService
+  -> Load document metadata from IDocumentRepository
   -> Project to DocumentDetailViewModel
   -> Show file details, hash, page count, extraction status, OCR warning, text preview
 ```

@@ -28,11 +28,16 @@ public sealed class DocumentImportTests
         Assert.NotEqual(sourcePdf, document.LocalFilePath);
         Assert.True(File.Exists(document.LocalFilePath));
         Assert.Equal(originalBytes, await File.ReadAllBytesAsync(sourcePdf));
-        Assert.StartsWith(workspace.Options.ImportsDirectoryPath, document.LocalFilePath, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith(workspace.Options.DocumentsDirectoryPath, document.LocalFilePath, StringComparison.OrdinalIgnoreCase);
+        Assert.EndsWith(Path.Combine(document.Id.ToString("N"), "original.pdf"), document.LocalFilePath, StringComparison.OrdinalIgnoreCase);
 
         await using var stream = File.OpenRead(document.LocalFilePath);
         var expectedHash = Convert.ToHexString(await SHA256.HashDataAsync(stream));
         Assert.Equal(expectedHash, document.Sha256Hash);
+        Assert.Equal(document.Id, document.DocumentId);
+        Assert.Equal(document.LocalFilePath, document.StoredPath);
+        Assert.False(document.RequiresOcr);
+        Assert.Contains("Local import test", document.ExtractedTextPreview, StringComparison.Ordinal);
         Assert.Equal(DocumentExtractionStatus.EmbeddedTextExtracted, document.ExtractionStatus);
         Assert.True(document.ExtractedTextCharacterCount > 0);
         Assert.Contains(document.Pages, page => page.TextBlocks.Any(block => block.Text.Contains("Local import test", StringComparison.Ordinal)));
@@ -81,7 +86,7 @@ public sealed class DocumentImportTests
 
         await importer.ImportAsync(sourcePdf);
 
-        Assert.True(Directory.Exists(workspace.Options.ImportsDirectoryPath));
+        Assert.True(Directory.Exists(workspace.Options.DocumentsDirectoryPath));
         Assert.True(Directory.Exists(workspace.Options.MetadataDirectoryPath));
         Assert.True(File.Exists(workspace.Options.DocumentMetadataPath));
     }
@@ -101,7 +106,7 @@ public sealed class DocumentImportTests
         var documents = await storage.ListDocumentsAsync();
         Assert.Empty(documents);
         Assert.False(Directory.Exists(workspace.Options.ImportsDirectoryPath) &&
-                     Directory.EnumerateFiles(workspace.Options.ImportsDirectoryPath).Any());
+                     Directory.EnumerateFiles(workspace.Options.ImportsDirectoryPath, "*", SearchOption.AllDirectories).Any());
     }
 
     [Fact]
@@ -232,6 +237,8 @@ public sealed class DocumentImportTests
         Assert.Equal(1, page.PageNumber);
         Assert.Empty(page.TextBlocks);
         Assert.Equal(DocumentExtractionStatus.OcrNeeded, document.ExtractionStatus);
+        Assert.True(document.RequiresOcr);
+        Assert.Equal(string.Empty, document.ExtractedTextPreview);
         Assert.Equal(0, document.ExtractedTextCharacterCount);
     }
 
@@ -266,7 +273,7 @@ public sealed class DocumentImportTests
         Assert.Equal(firstImport.Id, document.Id);
         Assert.Equal(firstImport.LocalFilePath, secondImport.LocalFilePath);
         Assert.Equal(firstImport.Sha256Hash, secondImport.Sha256Hash);
-        Assert.Single(Directory.EnumerateFiles(workspace.Options.ImportsDirectoryPath));
+        Assert.Single(Directory.EnumerateFiles(workspace.Options.DocumentsDirectoryPath, "original.pdf", SearchOption.AllDirectories));
     }
 
     [Fact]
@@ -289,13 +296,60 @@ public sealed class DocumentImportTests
         Assert.Equal(firstImport.Sha256Hash, secondImport.Sha256Hash);
     }
 
-    private static PlaceholderDocumentImportService CreateImporter(JsonLocalStorageService storage, LocalWorkspaceOptions options)
+    [Fact]
+    public async Task Repository_finds_documents_by_sha256_hash()
     {
-        return new PlaceholderDocumentImportService(
+        using var workspace = TestWorkspace.Create();
+        var document = new VeteranDocument
+        {
+            OriginalFileName = "find-me.pdf",
+            LocalFilePath = Path.Combine(workspace.Options.DocumentsDirectoryPath, "find-me", "original.pdf"),
+            Sha256Hash = "FINDME"
+        };
+
+        var storage = new JsonLocalStorageService(workspace.Options);
+        await storage.SaveDocumentAsync(document);
+
+        var foundDocument = await storage.FindBySha256HashAsync("findme");
+
+        Assert.NotNull(foundDocument);
+        Assert.Equal(document.Id, foundDocument.Id);
+    }
+
+    [Fact]
+    public async Task Extraction_failure_removes_workspace_copy_and_does_not_persist_document()
+    {
+        using var workspace = TestWorkspace.Create();
+        var sourcePdf = workspace.WriteMinimalPdf("extract-fails.pdf");
+        var storage = new JsonLocalStorageService(workspace.Options);
+        var importer = new LocalDocumentImportService(
+            storage,
+            new ThrowingTextExtractionService(),
+            new Sha256FileHashService(),
+            workspace.Options);
+
+        await Assert.ThrowsAsync<InvalidDataException>(() => importer.ImportAsync(sourcePdf));
+
+        Assert.Empty(await storage.ListDocumentsAsync());
+        Assert.False(Directory.Exists(workspace.Options.DocumentsDirectoryPath) &&
+                     Directory.EnumerateFiles(workspace.Options.DocumentsDirectoryPath, "*", SearchOption.AllDirectories).Any());
+    }
+
+    private static LocalDocumentImportService CreateImporter(JsonLocalStorageService storage, LocalWorkspaceOptions options)
+    {
+        return new LocalDocumentImportService(
             storage,
             new PlaceholderTextExtractionService(),
             new Sha256FileHashService(),
             options);
+    }
+
+    private sealed class ThrowingTextExtractionService : VeteranEvidenceAssist.Core.Interfaces.ITextExtractionService
+    {
+        public Task<IReadOnlyList<ExtractedTextBlock>> ExtractTextAsync(VeteranDocument document, CancellationToken cancellationToken = default)
+        {
+            throw new InvalidDataException("Synthetic extraction failure.");
+        }
     }
 
     private sealed class TestWorkspace : IDisposable

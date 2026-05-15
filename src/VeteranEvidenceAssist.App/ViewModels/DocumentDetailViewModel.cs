@@ -7,11 +7,16 @@ public sealed class DocumentDetailViewModel
 {
     public string FileName { get; init; } = string.Empty;
     public string ImportDate { get; init; } = string.Empty;
+    public string ImportedAtUtc { get; init; } = string.Empty;
     public string Hash { get; init; } = string.Empty;
     public string ShortHash { get; init; } = string.Empty;
     public int PageCount { get; init; }
     public string ExtractionStatus { get; init; } = string.Empty;
     public bool IsOcrNeeded { get; init; }
+    public string OcrRequiredDisplay => IsOcrNeeded ? "Yes" : "No";
+    public string DocumentType { get; init; } = string.Empty;
+    public string RedactionStatus { get; init; } = string.Empty;
+    public string StoredPath { get; init; } = string.Empty;
     public IReadOnlyList<ExtractedTextPreviewItem> TextPreviewItems { get; init; } = [];
 
     public static DocumentDetailViewModel FromDocument(VeteranDocument document)
@@ -25,11 +30,15 @@ public sealed class DocumentDetailViewModel
         {
             FileName = document.OriginalFileName,
             ImportDate = document.ImportedAt.ToLocalTime().ToString("g"),
+            ImportedAtUtc = document.ImportedAtUtc.ToString("u"),
             Hash = document.Sha256Hash,
             ShortHash = CreateShortHash(document.Sha256Hash),
             PageCount = document.Pages.Count,
             ExtractionStatus = ToStatusLabel(document),
-            IsOcrNeeded = document.ExtractionStatus == DocumentExtractionStatus.OcrNeeded,
+            IsOcrNeeded = document.RequiresOcr || document.ExtractionStatus == DocumentExtractionStatus.OcrNeeded,
+            DocumentType = document.DocumentType.ToString(),
+            RedactionStatus = document.RedactionStatus,
+            StoredPath = document.StoredPath,
             TextPreviewItems = textPreviewItems
         };
     }

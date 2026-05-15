@@ -7,7 +7,7 @@ namespace VeteranEvidenceAssist.App.Pages;
 public partial class DocumentsPage : ContentPage
 {
     private readonly IDocumentImportService _documentImportService;
-    private readonly ILocalStorageService _localStorageService;
+    private readonly IDocumentRepository _documentRepository;
 
     public DocumentsPage()
     {
@@ -17,7 +17,7 @@ public partial class DocumentsPage : ContentPage
             ?? throw new InvalidOperationException("Application services are unavailable.");
 
         _documentImportService = services.GetRequiredService<IDocumentImportService>();
-        _localStorageService = services.GetRequiredService<ILocalStorageService>();
+        _documentRepository = services.GetRequiredService<IDocumentRepository>();
     }
 
     protected override async void OnAppearing()
@@ -50,7 +50,12 @@ public partial class DocumentsPage : ContentPage
             foreach (var file in selectedFiles)
             {
                 ImportStatusLabel.Text = $"Importing {file.FileName} locally...";
-                await _documentImportService.ImportAsync(file.FullPath);
+                var importedDocument = await _documentImportService.ImportAsync(file.FullPath);
+                if (!string.Equals(importedDocument.OriginalFileName, file.FileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    ImportStatusLabel.Text = $"{file.FileName} is already imported as {importedDocument.OriginalFileName}. Reused the existing local record.";
+                }
+
                 processedCount++;
             }
 
@@ -95,7 +100,7 @@ public partial class DocumentsPage : ContentPage
 
     private async Task RefreshDocumentsAsync()
     {
-        var documents = await _localStorageService.ListDocumentsAsync();
+        var documents = await _documentRepository.ListDocumentsAsync();
         DocumentsCollection.ItemsSource = documents.Select(DocumentListItem.FromDocument).ToList();
     }
 

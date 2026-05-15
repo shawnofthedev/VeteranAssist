@@ -23,11 +23,14 @@ Current persisted metadata includes:
 - SHA-256 hash
 - Import timestamp
 - Extraction status
+- OCR-required flag
+- Extracted text preview
+- Redaction status placeholder
 - Extracted text character count
 - Page metadata
 - Extracted text blocks
 
-Imported files are copied into the local workspace under `imports`.
+Imported files are copied into the local workspace under `AppData/Documents/{DocumentId}/original.pdf`.
 
 Duplicate imports are detected by SHA-256 hash. If a matching metadata record exists and its workspace copy still exists, the existing record is reused instead of writing duplicate metadata.
 

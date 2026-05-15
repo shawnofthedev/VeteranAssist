@@ -7,7 +7,7 @@
         <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="24">
             <VerticalStackLayout Spacing="6">
                 <Label Text="Documents" Style="{StaticResource Headline}" />
-                <Label Text="Low-fidelity workspace for selecting PDFs, preserving originals, and tracking local processing status."
+                <Label Text="Select PDFs, preserve originals, and track local processing status."
                        Style="{StaticResource SubHeadline}" />
             </VerticalStackLayout>
 
@@ -20,7 +20,7 @@
                 <VerticalStackLayout Spacing="14">
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="12">
-                            <Label Text="Import Queue" Style="{StaticResource SectionTitle}" />
+                            <Label Text="Import Documents" Style="{StaticResource SectionTitle}" />
                             <Label Text="Choose PDFs from this device. Originals remain unchanged and are copied into the local workspace."
                                    Style="{StaticResource MetaText}" />
                             <Button x:Name="ChoosePdfsButton"
@@ -36,9 +36,9 @@
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Local Storage" Style="{StaticResource CardTitle}" />
-                            <Label Text="Workspace: AppData / VeteranEvidenceAssist / data" Style="{StaticResource MetaText}" />
-                            <Label Text="Imports: immutable copies" Style="{StaticResource MetaText}" />
-                            <Label Text="Metadata: local index only" Style="{StaticResource MetaText}" />
+                            <Label Text="Workspace: app-managed local data folder" Style="{StaticResource MetaText}" />
+                            <Label Text="Documents: {}{DocumentId} / original.pdf immutable copies" Style="{StaticResource MetaText}" />
+                            <Label Text="Metadata: local JSON index" Style="{StaticResource MetaText}" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

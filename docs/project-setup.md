@@ -74,6 +74,7 @@ Implemented at this stage:
 - Local PDF import service.
 - SHA-256 hashing for imported files.
 - JSON metadata persistence.
+- `IDocumentRepository` abstraction for document metadata save/list/get/hash lookup.
 - Embedded PDF text extraction when available.
 - OCR-needed status detection for PDFs with little or no embedded text.
 - Document detail/review workflow with metadata, extraction status, and extracted text preview.
@@ -94,8 +95,8 @@ Not implemented yet:
 The app is designed to use local application storage. Imported files should be copied into a local workspace and originals should remain unchanged.
 
 ```text
-data/
-  imports/
+AppData/
+  Documents/
   metadata/
   redacted/
   exports/
@@ -103,6 +104,12 @@ data/
 ```
 
 Current metadata persistence is JSON-backed for early development. The architecture docs still identify SQLite/EF Core as the intended later storage direction once the model stabilizes.
+
+Imported PDF copies are stored as:
+
+```text
+AppData/Documents/{DocumentId}/original.pdf
+```
 
 Phase 1 extraction status is persisted with document metadata. Text-based PDFs are marked as embedded-text extracted, while PDFs with little or no embedded text are marked as OCR-needed. OCR itself is intentionally deferred.
 

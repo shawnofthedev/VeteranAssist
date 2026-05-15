@@ -65,6 +65,19 @@
                             <Label Text="This PDF appears to have little or no embedded text. OCR is not implemented yet, so scanned content may not be searchable in this phase."
                                    LineBreakMode="WordWrap" />
                         </Border>
+                        <Border Style="{StaticResource InfoCallout}">
+                            <Label Text="This review is local-only. The stored PDF copy, metadata, hash, and extracted preview remain in the app workspace unless you explicitly export or share them."
+                                   LineBreakMode="WordWrap" />
+                        </Border>
+                        <Label Text="Document Metadata" Style="{StaticResource SectionTitle}" />
+                        <VerticalStackLayout Spacing="6">
+                            <Label x:Name="ImportedAtUtcLabel" Text="Imported UTC: -" Style="{StaticResource MetaText}" />
+                            <Label x:Name="Sha256Label" Text="SHA-256: -" Style="{StaticResource MetaText}" LineBreakMode="CharacterWrap" />
+                            <Label x:Name="ExtractionStatusLabel" Text="Extraction status: -" Style="{StaticResource MetaText}" />
+                            <Label x:Name="OcrRequiredLabel" Text="OCR required: -" Style="{StaticResource MetaText}" />
+                            <Label x:Name="DocumentTypeLabel" Text="Document type: -" Style="{StaticResource MetaText}" />
+                            <Label x:Name="RedactionStatusLabel" Text="Redaction status: -" Style="{StaticResource MetaText}" />
+                        </VerticalStackLayout>
                         <Label Text="Extracted Text" Style="{StaticResource SectionTitle}" />
                         <CollectionView x:Name="ExtractedTextCollection"
                                         EmptyView="No embedded text is available for this document. OCR is not implemented yet.">

@@ -48,12 +48,13 @@ PDFs with little or no embedded text are marked as OCR-needed for a future phase
 - Settings wireframe for local workspace, privacy/security, AI providers, and export preferences.
 - Local PDF import service groundwork:
   - PDF path validation.
-  - Copies imported files into local workspace.
+  - Copies imported files into `AppData/Documents/{DocumentId}/original.pdf` in the app-managed local workspace.
   - SHA-256 file hashing.
   - JSON metadata persistence.
   - Embedded PDF text extraction with PdfPig.
   - OCR-needed status for PDFs with little or no embedded text.
   - Hash-based duplicate import reuse.
+  - Repository abstraction for document save/list/get/hash lookup.
 - Unit tests for file hashing, import validation, original-file immutability, duplicate import handling, metadata persistence, extraction status, no-text PDF detection, and core domain behavior.
 
 ## Planned Roadmap
@@ -92,6 +93,7 @@ Key architectural rules:
 - App layer depends on abstractions and UI-specific workflow code.
 - Core stays UI- and storage-independent.
 - Document parsing stays isolated in the Documents project.
+- Document metadata access flows through `IDocumentRepository`.
 - AI provider implementations must remain swappable and user-controlled.
 - Security-sensitive storage and credential behavior should remain centralized.
 

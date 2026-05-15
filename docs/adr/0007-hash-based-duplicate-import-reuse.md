@@ -22,6 +22,7 @@ Import behavior:
 - Do not create a second metadata record.
 - Do not create a second workspace copy.
 - If matching metadata exists but the workspace copy is missing, perform a new import and persist a new record.
+- The repository exposes hash lookup through `IDocumentRepository.FindBySha256HashAsync` so duplicate detection does not depend on UI or storage implementation details.
 
 ## Consequences
 

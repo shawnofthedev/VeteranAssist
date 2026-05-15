@@ -61,6 +61,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - `NoTextFound`
   - `ExtractionFailed`
 - Added `IFileHashService`.
+- Added `IDocumentRepository` for document metadata save/get/list/hash lookup.
 
 ### Security
 
@@ -69,25 +70,26 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 
 ### Documents
 
-- `PlaceholderDocumentImportService` currently performs the real Phase 1 local import work despite the placeholder name.
+- `LocalDocumentImportService` performs the real Phase 1 local import work. `PlaceholderDocumentImportService` remains as a compatibility wrapper.
 - Import behavior:
   - Validates PDF path.
-  - Copies PDF into local workspace under `imports`.
+  - Copies PDF into local workspace under `AppData/Documents/{DocumentId}/original.pdf`.
   - Leaves original file untouched.
   - Computes SHA-256 hash on the copied file.
   - Reuses an existing metadata record when the selected PDF hash is already imported and the workspace copy still exists.
   - Extracts embedded text via `PlaceholderTextExtractionService`.
   - Persists pages and extracted text blocks.
-  - Sets extraction status:
+  - Persists extracted text preview and sets extraction status:
     - `EmbeddedTextExtracted` when meaningful embedded text is found.
     - `OcrNeeded` when pages exist but little/no embedded text exists.
+  - Sets `RequiresOcr` when extraction status is OCR-needed.
   - Cleans up copied workspace file if PDF extraction fails before metadata persistence.
 - `PlaceholderTextExtractionService` uses PdfPig for embedded text extraction only.
 - No OCR is implemented.
 
 ### Storage
 
-- `JsonLocalStorageService` persists document metadata locally as JSON.
+- `JsonLocalStorageService` persists document metadata locally as JSON and implements `IDocumentRepository`.
 - Current metadata path comes from `LocalWorkspaceOptions`.
 - SQLite/EF Core remains a later intended direction, but JSON is current Phase 1 persistence.
 
@@ -105,7 +107,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 - `DocumentsPage`:
   - Lets user select one or more local PDFs.
   - Imports PDFs through `IDocumentImportService`.
-  - Lists imported documents from `ILocalStorageService`.
+  - Lists imported documents from `IDocumentRepository`.
   - Shows page count, extraction status, short hash, and import date.
   - Navigates to document review using Shell route `//document-review`.
   - Navigation failures are caught and shown as a safe status message.
@@ -126,7 +128,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 
 Current test project: `tests\VeteranEvidenceAssist.Tests`
 
-Current test count observed: 19 passing.
+Current test count observed: 21 passing.
 
 Covered behaviors include:
 
@@ -147,6 +149,8 @@ Covered behaviors include:
 - Blank/no-text PDF status is `OcrNeeded`.
 - Duplicate imports reuse an existing record when the workspace copy still exists.
 - Stale duplicate metadata with a missing workspace copy allows a new import.
+- Repository lookup by SHA-256 hash.
+- Synthetic extraction failure cleanup/no partial metadata persistence.
 
 Useful commands:
 
@@ -166,7 +170,7 @@ This compile check passed after the latest changes. It may leave generated build
 
 - MAUI XAML compiled-binding warnings remain for CollectionView templates because `x:DataType` is not set.
 - The app may lock output DLLs while running, causing normal solution builds to fail until the app is closed.
-- `PlaceholderDocumentImportService` and `PlaceholderTextExtractionService` names are now misleading because they contain real Phase 1 behavior.
+- `PlaceholderTextExtractionService` name is still misleading because it contains real embedded PDF text extraction behavior.
 - PDF page rendering is not implemented; Document Review uses a placeholder viewer.
 - OCR is intentionally not implemented.
 - Redaction/export workflows are still placeholders.
@@ -175,17 +179,14 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Suggested Next Steps
 
-1. Rename placeholder services to real names:
-   - `PlaceholderDocumentImportService` -> `LocalDocumentImportService`
-   - `PlaceholderTextExtractionService` -> `PdfPigTextExtractionService`
+1. Rename `PlaceholderTextExtractionService` to `PdfPigTextExtractionService`.
 2. Add compiled bindings or typed view models for MAUI list templates.
 3. Add a proper document detail route registration if Shell behavior needs refinement.
 4. Add a user-visible local workspace path display.
-5. Add duplicate import UX details, such as a visible per-file "already imported" notice.
-6. Add failure status metadata if extraction fails after file copy.
-7. Add local OCR in a later phase only after privacy/security review.
-8. Add encrypted or SQLite-backed storage in a later phase.
-9. Add tests for `DocumentDetailViewModel`.
+5. Add stronger per-file duplicate import UX.
+6. Add local OCR in a later phase only after privacy/security review.
+7. Add encrypted or SQLite-backed storage in a later phase.
+8. Add tests for `DocumentDetailViewModel`.
 
 ## Most Relevant Files
 
@@ -195,6 +196,7 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.Core/Models/VeteranDocument.cs`
 - `src/VeteranEvidenceAssist.Core/Enums/DocumentExtractionStatus.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IFileHashService.cs`
+- `src/VeteranEvidenceAssist.Core/Interfaces/IDocumentRepository.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/PlaceholderDocumentImportService.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/PlaceholderTextExtractionService.cs`
 - `src/VeteranEvidenceAssist.Storage/Repositories/JsonLocalStorageService.cs`

@@ -31,6 +31,14 @@ public sealed class InMemoryLocalStorageService : ILocalStorageService
         return Task.FromResult(documents);
     }
 
+    public Task<VeteranDocument?> FindBySha256HashAsync(string sha256Hash, CancellationToken cancellationToken = default)
+    {
+        var document = _documents.Values.FirstOrDefault(document =>
+            string.Equals(document.Sha256Hash, sha256Hash, StringComparison.OrdinalIgnoreCase));
+
+        return Task.FromResult(document);
+    }
+
     public Task SaveEvidenceTimelineAsync(EvidenceTimeline timeline, CancellationToken cancellationToken = default)
     {
         _timelines[timeline.Id] = timeline;

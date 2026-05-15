@@ -5,7 +5,7 @@ namespace VeteranEvidenceAssist.App.Pages;
 public partial class ImportDocumentsPage : ContentPage
 {
     private readonly IDocumentImportService _documentImportService;
-    private readonly ILocalStorageService _localStorageService;
+    private readonly IDocumentRepository _documentRepository;
 
     public ImportDocumentsPage()
     {
@@ -15,7 +15,7 @@ public partial class ImportDocumentsPage : ContentPage
             ?? throw new InvalidOperationException("Application services are unavailable.");
 
         _documentImportService = services.GetRequiredService<IDocumentImportService>();
-        _localStorageService = services.GetRequiredService<ILocalStorageService>();
+        _documentRepository = services.GetRequiredService<IDocumentRepository>();
     }
 
     protected override async void OnAppearing()
@@ -60,6 +60,6 @@ public partial class ImportDocumentsPage : ContentPage
 
     private async Task RefreshDocumentsAsync()
     {
-        DocumentsView.ItemsSource = await _localStorageService.ListDocumentsAsync();
+        DocumentsView.ItemsSource = await _documentRepository.ListDocumentsAsync();
     }
 }

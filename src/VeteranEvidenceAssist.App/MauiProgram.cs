@@ -28,12 +28,12 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        var workspacePath = Path.Combine(FileSystem.AppDataDirectory, "data");
+        var workspacePath = FileSystem.AppDataDirectory;
         var databasePath = Path.Combine(workspacePath, "veteran-evidence-assist.db");
 
         builder.Services.AddSingleton(new LocalWorkspaceOptions { WorkspaceRootPath = workspacePath });
         builder.Services.AddSingleton(new LocalStorageOptions { DatabasePath = databasePath });
-        builder.Services.AddSingleton<IDocumentImportService, PlaceholderDocumentImportService>();
+        builder.Services.AddSingleton<IDocumentImportService, LocalDocumentImportService>();
         builder.Services.AddSingleton<PlaceholderTextExtractionService>();
         builder.Services.AddSingleton<ITextExtractionService>(provider => provider.GetRequiredService<PlaceholderTextExtractionService>());
         builder.Services.AddSingleton<IOcrService>(provider => provider.GetRequiredService<PlaceholderTextExtractionService>());
@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IEvidenceExtractionService, PlaceholderEvidenceExtractionService>();
         builder.Services.AddSingleton<IPromptGenerationService, LocalPromptGenerationService>();
         builder.Services.AddSingleton<ILocalStorageService, JsonLocalStorageService>();
+        builder.Services.AddSingleton<IDocumentRepository>(provider => provider.GetRequiredService<ILocalStorageService>());
         builder.Services.AddSingleton<IAuditLogService, InMemoryAuditLogService>();
         builder.Services.AddSingleton<IEncryptionService, PlaceholderEncryptionService>();
         builder.Services.AddSingleton<IFileHashService, Sha256FileHashService>();

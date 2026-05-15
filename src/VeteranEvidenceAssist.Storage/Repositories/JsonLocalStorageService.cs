@@ -77,6 +77,26 @@ public sealed class JsonLocalStorageService : ILocalStorageService
         }
     }
 
+    public async Task<VeteranDocument?> FindBySha256HashAsync(string sha256Hash, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sha256Hash))
+        {
+            return null;
+        }
+
+        await _gate.WaitAsync(cancellationToken);
+        try
+        {
+            var documents = await ReadDocumentsAsync(cancellationToken);
+            return documents.FirstOrDefault(document =>
+                string.Equals(document.Sha256Hash, sha256Hash, StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
     public Task SaveEvidenceTimelineAsync(EvidenceTimeline timeline, CancellationToken cancellationToken = default)
     {
         // Phase 1 persists document metadata only. Evidence timelines arrive in a later workflow.
