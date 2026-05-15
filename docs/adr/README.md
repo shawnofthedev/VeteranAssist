@@ -14,6 +14,7 @@ ADRs are short records of decisions that affect architecture, privacy, security,
 | [ADR-0004](0004-pdfpig-embedded-text-extraction.md) | PdfPig for embedded PDF text extraction | Accepted |
 | [ADR-0005](0005-defer-ocr-until-after-local-intake.md) | Defer OCR until after local intake | Accepted |
 | [ADR-0006](0006-defer-redaction-and-export.md) | Defer redaction and export implementation | Accepted |
+| [ADR-0007](0007-hash-based-duplicate-import-reuse.md) | Hash-based duplicate import reuse | Accepted |
 
 ## Status Values
 

@@ -29,6 +29,8 @@ Current persisted metadata includes:
 
 Imported files are copied into the local workspace under `imports`.
 
+Duplicate imports are detected by SHA-256 hash. If a matching metadata record exists and its workspace copy still exists, the existing record is reused instead of writing duplicate metadata.
+
 ## Consequences
 
 Positive:

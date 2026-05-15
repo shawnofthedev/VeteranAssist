@@ -61,6 +61,7 @@ docs/adr/
   0004-pdfpig-embedded-text-extraction.md
   0005-defer-ocr-until-after-local-intake.md
   0006-defer-redaction-and-export.md
+  0007-hash-based-duplicate-import-reuse.md
 ```
 
 Use ADRs to understand why major decisions were made.
@@ -225,6 +226,7 @@ Current behavior:
 - Creates page metadata and extracted text blocks.
 - Marks text-based PDFs as `EmbeddedTextExtracted`.
 - Marks no-text/scanned-like PDFs as `OcrNeeded`.
+- Reuses an existing import when a selected PDF has the same SHA-256 hash and the workspace copy still exists.
 - Does not OCR.
 - Does not upload anything.
 
@@ -388,6 +390,7 @@ Current coverage includes:
 - Embedded PDF text extraction.
 - OCR-needed detection for no-text PDFs.
 - Duplicate import behavior.
+- Stale duplicate metadata with missing workspace copy.
 - Corrupt PDF cleanup/no partial metadata persistence.
 
 Run tests:
@@ -434,8 +437,10 @@ Flow:
 User chooses PDFs
   -> IDocumentImportService.ImportAsync
   -> Validate PDF
+  -> Hash selected file locally
+  -> Reuse existing record if hash already exists with a valid workspace copy
   -> Copy into workspace/imports
-  -> Hash copied file
+  -> Hash copied file for persisted metadata
   -> Extract embedded text locally
   -> Determine extraction status
   -> Save metadata locally

@@ -46,15 +46,15 @@ public partial class DocumentsPage : ContentPage
                 return;
             }
 
-            var importedCount = 0;
+            var processedCount = 0;
             foreach (var file in selectedFiles)
             {
                 ImportStatusLabel.Text = $"Importing {file.FileName} locally...";
                 await _documentImportService.ImportAsync(file.FullPath);
-                importedCount++;
+                processedCount++;
             }
 
-            ImportStatusLabel.Text = $"Imported {importedCount} PDF file(s). No files were uploaded.";
+            ImportStatusLabel.Text = $"Processed {processedCount} PDF file(s). Duplicates reuse existing local records. No files were uploaded.";
             await RefreshDocumentsAsync();
         }
         catch (Exception ex) when (ex is ArgumentException or FileNotFoundException or NotSupportedException or InvalidDataException)

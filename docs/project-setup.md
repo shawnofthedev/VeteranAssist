@@ -64,7 +64,7 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj
 
 ## Current Development Phase
 
-Current phase: Phase 1 Local Document Intake.
+Current phase: Phase 1 Local Document Intake complete.
 
 Implemented at this stage:
 
@@ -77,6 +77,7 @@ Implemented at this stage:
 - Embedded PDF text extraction when available.
 - OCR-needed status detection for PDFs with little or no embedded text.
 - Document detail/review workflow with metadata, extraction status, and extracted text preview.
+- Hash-based duplicate import reuse.
 - Tests for domain models and local import behavior.
 
 Not implemented yet:
@@ -104,6 +105,8 @@ data/
 Current metadata persistence is JSON-backed for early development. The architecture docs still identify SQLite/EF Core as the intended later storage direction once the model stabilizes.
 
 Phase 1 extraction status is persisted with document metadata. Text-based PDFs are marked as embedded-text extracted, while PDFs with little or no embedded text are marked as OCR-needed. OCR itself is intentionally deferred.
+
+Duplicate imports are handled by SHA-256 hash. If the same file content is already imported and the workspace copy still exists, the existing metadata record is reused.
 
 ## Solution Creation Reference
 

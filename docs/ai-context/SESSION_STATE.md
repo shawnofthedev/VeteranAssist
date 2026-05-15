@@ -16,11 +16,11 @@ This application is designed to assist veterans in organizing and reviewing thei
 
 ## Active Phase
 
-Current phase: Phase 1, Local Document Intake.
+Current phase: Phase 1, Local Document Intake complete.
 
 Current goal:
 
-Implement safe local PDF intake, local workspace copies, SHA-256 hashing, metadata persistence, embedded PDF text extraction, OCR-needed detection, and a basic document detail/review workflow.
+Maintain the completed safe local PDF intake milestone and prepare for the next phase.
 
 ## Hard Constraints
 
@@ -75,6 +75,7 @@ Implement safe local PDF intake, local workspace copies, SHA-256 hashing, metada
   - Copies PDF into local workspace under `imports`.
   - Leaves original file untouched.
   - Computes SHA-256 hash on the copied file.
+  - Reuses an existing metadata record when the selected PDF hash is already imported and the workspace copy still exists.
   - Extracts embedded text via `PlaceholderTextExtractionService`.
   - Persists pages and extracted text blocks.
   - Sets extraction status:
@@ -125,7 +126,7 @@ Implement safe local PDF intake, local workspace copies, SHA-256 hashing, metada
 
 Current test project: `tests\VeteranEvidenceAssist.Tests`
 
-Current test count observed: 18 passing.
+Current test count observed: 19 passing.
 
 Covered behaviors include:
 
@@ -144,7 +145,8 @@ Covered behaviors include:
 - Text-based PDF status is `EmbeddedTextExtracted`.
 - Blank/no-text PDF creates page metadata without OCR.
 - Blank/no-text PDF status is `OcrNeeded`.
-- Duplicate imports create separate records with same hash and different IDs/local paths.
+- Duplicate imports reuse an existing record when the workspace copy still exists.
+- Stale duplicate metadata with a missing workspace copy allows a new import.
 
 Useful commands:
 
@@ -179,10 +181,7 @@ This compile check passed after the latest changes. It may leave generated build
 2. Add compiled bindings or typed view models for MAUI list templates.
 3. Add a proper document detail route registration if Shell behavior needs refinement.
 4. Add a user-visible local workspace path display.
-5. Add duplicate import UX policy:
-   - allow duplicates,
-   - warn on same hash,
-   - or reuse existing record.
+5. Add duplicate import UX details, such as a visible per-file "already imported" notice.
 6. Add failure status metadata if extraction fails after file copy.
 7. Add local OCR in a later phase only after privacy/security review.
 8. Add encrypted or SQLite-backed storage in a later phase.

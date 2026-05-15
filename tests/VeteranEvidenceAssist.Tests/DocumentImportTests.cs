@@ -250,7 +250,7 @@ public sealed class DocumentImportTests
     }
 
     [Fact]
-    public async Task Duplicate_pdf_imports_create_separate_local_records_with_same_hash()
+    public async Task Duplicate_pdf_imports_reuse_existing_local_record_by_hash()
     {
         using var workspace = TestWorkspace.Create();
         var sourcePdf = workspace.WriteMinimalPdf("duplicate.pdf");
@@ -261,9 +261,31 @@ public sealed class DocumentImportTests
         var secondImport = await importer.ImportAsync(sourcePdf);
 
         var documents = await storage.ListDocumentsAsync();
+        var document = Assert.Single(documents);
+        Assert.Equal(firstImport.Id, secondImport.Id);
+        Assert.Equal(firstImport.Id, document.Id);
+        Assert.Equal(firstImport.LocalFilePath, secondImport.LocalFilePath);
+        Assert.Equal(firstImport.Sha256Hash, secondImport.Sha256Hash);
+        Assert.Single(Directory.EnumerateFiles(workspace.Options.ImportsDirectoryPath));
+    }
+
+    [Fact]
+    public async Task Duplicate_hash_with_missing_workspace_file_imports_new_local_record()
+    {
+        using var workspace = TestWorkspace.Create();
+        var sourcePdf = workspace.WriteMinimalPdf("stale-duplicate.pdf");
+        var storage = new JsonLocalStorageService(workspace.Options);
+        var importer = CreateImporter(storage, workspace.Options);
+
+        var firstImport = await importer.ImportAsync(sourcePdf);
+        File.Delete(firstImport.LocalFilePath);
+
+        var secondImport = await importer.ImportAsync(sourcePdf);
+
+        var documents = await storage.ListDocumentsAsync();
         Assert.Equal(2, documents.Count);
         Assert.NotEqual(firstImport.Id, secondImport.Id);
-        Assert.NotEqual(firstImport.LocalFilePath, secondImport.LocalFilePath);
+        Assert.True(File.Exists(secondImport.LocalFilePath));
         Assert.Equal(firstImport.Sha256Hash, secondImport.Sha256Hash);
     }
 

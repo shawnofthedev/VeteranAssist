@@ -30,6 +30,13 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
 
         Directory.CreateDirectory(_workspaceOptions.ImportsDirectoryPath);
 
+        var sourceHash = await _fileHashService.ComputeSha256Async(filePath, cancellationToken);
+        var existingDocument = await FindExistingImportAsync(sourceHash, cancellationToken);
+        if (existingDocument is not null)
+        {
+            return existingDocument;
+        }
+
         var documentId = Guid.NewGuid();
         var localFilePath = BuildLocalImportPath(documentId, filePath);
 
@@ -91,6 +98,14 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
         }
 
         return DocumentExtractionStatus.OcrNeeded;
+    }
+
+    private async Task<VeteranDocument?> FindExistingImportAsync(string sha256Hash, CancellationToken cancellationToken)
+    {
+        var documents = await _localStorageService.ListDocumentsAsync(cancellationToken);
+        return documents.FirstOrDefault(document =>
+            string.Equals(document.Sha256Hash, sha256Hash, StringComparison.OrdinalIgnoreCase) &&
+            File.Exists(document.LocalFilePath));
     }
 
     private static void ValidateImport(string filePath)

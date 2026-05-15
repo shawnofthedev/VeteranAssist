@@ -29,9 +29,9 @@ Current UI messaging makes the core promise visible: nothing leaves this device 
 
 ## Current Status
 
-Current development phase: Phase 1 Local Document Intake.
+Current development phase: Phase 1 Local Document Intake complete.
 
-The application currently has a MAUI workflow for selecting local PDFs, copying them into the app workspace, hashing imported copies, persisting metadata, extracting embedded PDF text when present, and reviewing document details locally.
+The application currently has a MAUI workflow for selecting local PDFs, copying them into the app workspace, hashing imported copies, detecting duplicate imports by hash, persisting metadata, extracting embedded PDF text when present, and reviewing document details locally.
 
 PDFs with little or no embedded text are marked as OCR-needed for a future phase. OCR, true redaction, export generation, claim-specific recommendations, and cloud AI provider calls are not implemented.
 
@@ -53,7 +53,8 @@ PDFs with little or no embedded text are marked as OCR-needed for a future phase
   - JSON metadata persistence.
   - Embedded PDF text extraction with PdfPig.
   - OCR-needed status for PDFs with little or no embedded text.
-- Unit tests for file hashing, import validation, original-file immutability, duplicate import behavior, metadata persistence, extraction status, no-text PDF detection, and core domain behavior.
+  - Hash-based duplicate import reuse.
+- Unit tests for file hashing, import validation, original-file immutability, duplicate import handling, metadata persistence, extraction status, no-text PDF detection, and core domain behavior.
 
 ## Planned Roadmap
 
@@ -61,7 +62,7 @@ Phase 0: Project scaffold and core domain contracts.
 
 Phase 0.5: UX/wireframe foundation, navigation, design tokens, workflow clarity, and privacy messaging.
 
-Phase 1: Stable local document import, PDF handling, file hashing, metadata persistence, embedded PDF text extraction, OCR-needed detection, and document detail review.
+Phase 1: Stable local document import, PDF handling, file hashing, duplicate detection, metadata persistence, embedded PDF text extraction, OCR-needed detection, and document detail review. Complete.
 
 Phase 2: Local OCR, safer extraction confidence handling, evidence review workflows, and source navigation.
 
