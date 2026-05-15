@@ -19,11 +19,11 @@
                 <Grid RowDefinitions="Auto,*,Auto" RowSpacing="14">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Service record packet.pdf" Style="{StaticResource SectionTitle}" />
-                            <Label Text="Page 3 of 18 | Local copy | SHA-256 available in metadata" Style="{StaticResource MetaText}" />
+                            <Label x:Name="DocumentTitleLabel" Text="Select a document" Style="{StaticResource SectionTitle}" />
+                            <Label x:Name="DocumentMetaLabel" Text="Open a document from the Documents page to review extracted text." Style="{StaticResource MetaText}" />
                         </VerticalStackLayout>
                         <Border Grid.Column="1" Style="{StaticResource StatusBadge}">
-                            <Label Text="Embedded text found" Style="{StaticResource MetaText}" />
+                            <Label x:Name="TextStatusLabel" Text="No document" Style="{StaticResource MetaText}" />
                         </Border>
                     </Grid>
 
@@ -44,7 +44,7 @@
                                 <BoxView Style="{StaticResource PlaceholderBlock}" WidthRequest="390" HorizontalOptions="Center" />
                             </VerticalStackLayout>
                             <Label Grid.Row="2"
-                                   Text="Phase 1 TODO: render selected PDF page and link extracted text blocks to source coordinates."
+                                   Text="PDF rendering is not implemented yet. Phase 1 stores the local file path, page metadata, and extracted embedded text."
                                    Style="{StaticResource MetaText}"
                                    HorizontalTextAlignment="Center" />
                         </Grid>
@@ -52,7 +52,7 @@
 
                     <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Button Text="Previous" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
-                        <Slider Grid.Column="1" Minimum="1" Maximum="18" Value="3" IsEnabled="False" />
+                        <Slider x:Name="PageSlider" Grid.Column="1" Minimum="1" Maximum="1" Value="1" IsEnabled="False" />
                         <Button Grid.Column="2" Text="Next" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
                     </Grid>
                 </Grid>
@@ -62,10 +62,19 @@
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Extracted Text" Style="{StaticResource SectionTitle}" />
-                        <Label Text="Mock extracted paragraph with source page and extraction method visible. The user can compare this against the page before trusting it."
-                               LineBreakMode="WordWrap" />
+                        <CollectionView x:Name="ExtractedTextCollection"
+                                        EmptyView="No embedded text is available for this document. OCR is not implemented yet.">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <VerticalStackLayout Padding="0,0,0,14" Spacing="4">
+                                        <Label Text="{Binding PageLabel}" Style="{StaticResource CardTitle}" />
+                                        <Label Text="{Binding Text}" LineBreakMode="WordWrap" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                         <Border Style="{StaticResource StatusBadge}" HorizontalOptions="Start">
-                            <Label Text="Confidence: embedded text" Style="{StaticResource MetaText}" />
+                            <Label x:Name="ExtractionMethodLabel" Text="Extraction: none" Style="{StaticResource MetaText}" />
                         </Border>
                     </VerticalStackLayout>
                 </Border>
@@ -73,9 +82,8 @@
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Evidence Candidates" Style="{StaticResource SectionTitle}" />
-                        <Label Text="Date-like entry | Page 3 | Needs review" Style="{StaticResource MetaText}" />
-                        <Label Text="Treatment note heading | Page 3 | Needs review" Style="{StaticResource MetaText}" />
-                        <Label Text="Provider name mention | Page 3 | Needs review" Style="{StaticResource MetaText}" />
+                        <Label Text="Phase 2 TODO: create user-reviewed evidence candidates from extracted text while preserving source page references."
+                               Style="{StaticResource MetaText}" />
                     </VerticalStackLayout>
                 </Border>
 

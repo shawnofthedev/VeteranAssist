@@ -12,7 +12,7 @@
             </VerticalStackLayout>
 
             <Border Style="{StaticResource InfoCallout}">
-                <Label Text="Phase 0.5 wireframe: these controls are placeholders. Phase 1 will connect PDF selection, hashing, embedded text extraction, and metadata persistence."
+                <Label Text="Choose PDFs from this device. Originals are never modified; imported copies and metadata stay in the local workspace."
                        LineBreakMode="WordWrap" />
             </Border>
 
@@ -23,8 +23,13 @@
                             <Label Text="Import Queue" Style="{StaticResource SectionTitle}" />
                             <Label Text="Choose PDFs from this device. Originals remain unchanged and are copied into the local workspace."
                                    Style="{StaticResource MetaText}" />
-                            <Button Text="Choose PDFs" IsEnabled="False" />
+                            <Button x:Name="ChoosePdfsButton"
+                                    Text="Choose PDFs"
+                                    Clicked="OnChoosePdfsClicked" />
                             <Button Text="Open Local Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                            <Label x:Name="ImportStatusLabel"
+                                   Text="No import running."
+                                   Style="{StaticResource MetaText}" />
                         </VerticalStackLayout>
                     </Border>
 
@@ -40,38 +45,40 @@
 
                 <Border Grid.Column="1" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="Imported Documents" Style="{StaticResource SectionTitle}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label Text="Imported Documents" Style="{StaticResource SectionTitle}" />
+                            <Button Grid.Column="1"
+                                    Text="Refresh"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnRefreshClicked" />
+                        </Grid>
                         <Grid ColumnDefinitions="2*,*,*,*" Padding="0,0,0,8">
                             <Label Text="Name" Style="{StaticResource MetaText}" />
                             <Label Grid.Column="1" Text="Pages" Style="{StaticResource MetaText}" />
                             <Label Grid.Column="2" Text="Text" Style="{StaticResource MetaText}" />
-                            <Label Grid.Column="3" Text="Status" Style="{StaticResource MetaText}" />
+                            <Label Grid.Column="3" Text="Hash" Style="{StaticResource MetaText}" />
                         </Grid>
                         <BoxView HeightRequest="1" Color="{StaticResource BorderMuted}" />
-                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
-                            <Label Text="Service record packet.pdf" Style="{StaticResource CardTitle}" />
-                            <Label Grid.Column="1" Text="18" Style="{StaticResource MetaText}" />
-                            <Label Grid.Column="2" Text="Embedded" Style="{StaticResource MetaText}" />
-                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
-                                <Label Text="Review" Style="{StaticResource MetaText}" />
-                            </Border>
-                        </Grid>
-                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
-                            <Label Text="Clinic notes scan.pdf" Style="{StaticResource CardTitle}" />
-                            <Label Grid.Column="1" Text="42" Style="{StaticResource MetaText}" />
-                            <Label Grid.Column="2" Text="No text" Style="{StaticResource MetaText}" />
-                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
-                                <Label Text="OCR later" Style="{StaticResource MetaText}" />
-                            </Border>
-                        </Grid>
-                        <Grid ColumnDefinitions="2*,*,*,*" Padding="0,8">
-                            <Label Text="Private records.pdf" Style="{StaticResource CardTitle}" />
-                            <Label Grid.Column="1" Text="9" Style="{StaticResource MetaText}" />
-                            <Label Grid.Column="2" Text="Embedded" Style="{StaticResource MetaText}" />
-                            <Border Grid.Column="3" Style="{StaticResource StatusBadge}">
-                                <Label Text="Indexed" Style="{StaticResource MetaText}" />
-                            </Border>
-                        </Grid>
+                        <CollectionView x:Name="DocumentsCollection"
+                                        SelectionMode="Single"
+                                        SelectionChanged="OnDocumentSelectionChanged"
+                                        EmptyView="No PDFs imported yet.">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="2*,*,*,*"
+                                          Padding="0,10"
+                                          ColumnSpacing="12">
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="{Binding OriginalFileName}" Style="{StaticResource CardTitle}" />
+                                            <Label Text="{Binding ImportedAtDisplay}" Style="{StaticResource MetaText}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="{Binding PageCount}" Style="{StaticResource MetaText}" />
+                                        <Label Grid.Column="2" Text="{Binding TextStatus}" Style="{StaticResource MetaText}" />
+                                        <Label Grid.Column="3" Text="{Binding ShortHash}" Style="{StaticResource MetaText}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </VerticalStackLayout>
                 </Border>
             </Grid>

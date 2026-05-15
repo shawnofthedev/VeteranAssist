@@ -44,6 +44,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ILocalStorageService, JsonLocalStorageService>();
         builder.Services.AddSingleton<IAuditLogService, InMemoryAuditLogService>();
         builder.Services.AddSingleton<IEncryptionService, PlaceholderEncryptionService>();
+        builder.Services.AddSingleton<IFileHashService, Sha256FileHashService>();
 
         return builder.Build();
     }

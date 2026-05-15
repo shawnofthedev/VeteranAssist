@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using VeteranEvidenceAssist.Core.Enums;
 using VeteranEvidenceAssist.Core.Interfaces;
 using VeteranEvidenceAssist.Core.Models;
@@ -10,15 +9,18 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
 {
     private readonly ILocalStorageService _localStorageService;
     private readonly ITextExtractionService _textExtractionService;
+    private readonly IFileHashService _fileHashService;
     private readonly LocalWorkspaceOptions _workspaceOptions;
 
     public PlaceholderDocumentImportService(
         ILocalStorageService localStorageService,
         ITextExtractionService textExtractionService,
+        IFileHashService fileHashService,
         LocalWorkspaceOptions workspaceOptions)
     {
         _localStorageService = localStorageService;
         _textExtractionService = textExtractionService;
+        _fileHashService = fileHashService;
         _workspaceOptions = workspaceOptions;
     }
 
@@ -37,8 +39,7 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
             await source.CopyToAsync(destination, cancellationToken);
         }
 
-        await using var stream = File.OpenRead(localFilePath);
-        var hash = await SHA256.HashDataAsync(stream, cancellationToken);
+        var hash = await _fileHashService.ComputeSha256Async(localFilePath, cancellationToken);
 
         var document = new VeteranDocument
         {
@@ -46,7 +47,7 @@ public sealed class PlaceholderDocumentImportService : IDocumentImportService
             OriginalFileName = Path.GetFileName(filePath),
             LocalFilePath = localFilePath,
             DocumentType = InferDocumentType(filePath),
-            Sha256Hash = Convert.ToHexString(hash),
+            Sha256Hash = hash,
             ContainsSensitiveInformation = true
         };
 
