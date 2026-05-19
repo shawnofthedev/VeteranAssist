@@ -16,9 +16,12 @@
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Local Workspace" Style="{StaticResource SectionTitle}" />
                         <Label Text="Storage location" Style="{StaticResource MetaText}" />
-                        <Entry Text="AppData / VeteranEvidenceAssist / data" IsReadOnly="True" />
+                        <Entry x:Name="WorkspacePathEntry" IsReadOnly="True" />
                         <Button Text="Change Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
-                        <Label Text="Phase 1 TODO: show actual workspace path and document storage usage." Style="{StaticResource MetaText}" />
+                        <Label x:Name="DocumentsPathLabel" Style="{StaticResource MetaText}" />
+                        <Label x:Name="MetadataPathLabel" Style="{StaticResource MetaText}" />
+                        <Label Text="Imported originals remain unchanged. The app stores managed copies and metadata in this local workspace."
+                               Style="{StaticResource MetaText}" />
                     </VerticalStackLayout>
                 </Border>
 

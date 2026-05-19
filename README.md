@@ -42,10 +42,11 @@ PDFs with little or no embedded text are marked as OCR-needed for a future phase
 - Lightweight design system with color tokens, spacing, typography, cards, badges, and callouts.
 - Privacy-first workflow pages with clear local-control messaging.
 - Documents page import workflow for local PDF selection.
+- Documents page shows the local workspace paths, can copy the workspace path, and reports duplicate imports that reuse existing local records.
 - Split document review page with document metadata, extraction status, OCR-needed warning, and extracted text preview.
 - Redaction review wireframe with mock PII suggestions, confidence indicators, approve/reject placeholders, and export safety warning.
 - Prompt builder wireframe with selected evidence, template selector placeholder, payload preview, and copy prompt placeholder.
-- Settings wireframe for local workspace, privacy/security, AI providers, and export preferences.
+- Settings page for local workspace visibility, privacy/security, AI providers, and export preferences.
 - Appearance setting for Light, Dark, and System Default themes persisted locally with MAUI preferences.
 - Local PDF import service groundwork:
   - PDF path validation.
@@ -59,6 +60,8 @@ PDFs with little or no embedded text are marked as OCR-needed for a future phase
 - Unit tests for file hashing, import validation, original-file immutability, duplicate import handling, metadata persistence, extraction status, no-text PDF detection, and core domain behavior.
 
 ## Planned Roadmap
+
+See `docs/roadmap.md` for the durable phase-by-phase roadmap and product guardrails.
 
 Phase 0: Project scaffold and core domain contracts.
 

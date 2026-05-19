@@ -27,6 +27,7 @@ docs/
   architecture.md
   project-setup.md
   redaction-spec.md
+  roadmap.md
   security.md
   ai-context/
   adr/
@@ -38,6 +39,7 @@ Docs:
 - `docs/security.md`: threat model, storage/security expectations, logging rules, API key rules, and export security.
 - `docs/redaction-spec.md`: redaction requirements, user review workflow, permanent removal requirement, and future validation needs.
 - `docs/project-setup.md`: prerequisites, build/test commands, current phase, workspace notes, and scaffold reference.
+- `docs/roadmap.md`: phase-by-phase product roadmap, current status, priorities, and guardrails for future work.
 
 AI continuity:
 
@@ -141,6 +143,7 @@ Current active document intake flow:
 Settings:
 
 - `SettingsPage.xaml` includes local workspace, privacy/security, appearance, AI provider, and export preference sections.
+- Local workspace settings show the current app data root, document-copy directory, and JSON metadata path.
 - Appearance supports Light, Dark, and System Default modes and is persisted locally with MAUI `Preferences`.
 - `App.xaml.cs` applies the saved appearance mode on startup through `Application.Current.UserAppTheme`.
 
@@ -242,6 +245,7 @@ Current behavior:
 - Reuses an existing import through `IDocumentRepository.FindBySha256HashAsync` when a selected PDF has the same SHA-256 hash and the workspace copy still exists.
 - Does not OCR.
 - Does not upload anything.
+- `DocumentsPage` pre-checks selected file hashes so the import summary can tell users which selections reused existing local records.
 
 Note:
 
@@ -450,6 +454,7 @@ Flow:
 User chooses PDFs
   -> IDocumentImportService.ImportAsync
   -> Validate PDF
+  -> DocumentsPage pre-checks hash for duplicate UX
   -> Hash selected file locally
   -> Reuse existing record if hash already exists with a valid workspace copy
   -> Copy into AppData/Documents/{DocumentId}/original.pdf
@@ -518,7 +523,5 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 
 - Add tests for `DocumentDetailViewModel`.
 - Rename placeholder services to production names.
-- Add duplicate-import warning UX.
-- Add workspace path display.
 - Add typed `x:DataType` bindings to reduce MAUI warnings.
 - Add local OCR only after privacy/performance design review.

@@ -1,6 +1,7 @@
 using VeteranEvidenceAssist.Core.Interfaces;
 using VeteranEvidenceAssist.Core.Models;
 using VeteranEvidenceAssist.Core.Enums;
+using VeteranEvidenceAssist.Core.Options;
 
 namespace VeteranEvidenceAssist.App.Pages;
 
@@ -8,6 +9,8 @@ public partial class DocumentsPage : ContentPage
 {
     private readonly IDocumentImportService _documentImportService;
     private readonly IDocumentRepository _documentRepository;
+    private readonly IFileHashService _fileHashService;
+    private readonly LocalWorkspaceOptions _workspaceOptions;
 
     public DocumentsPage()
     {
@@ -18,6 +21,10 @@ public partial class DocumentsPage : ContentPage
 
         _documentImportService = services.GetRequiredService<IDocumentImportService>();
         _documentRepository = services.GetRequiredService<IDocumentRepository>();
+        _fileHashService = services.GetRequiredService<IFileHashService>();
+        _workspaceOptions = services.GetRequiredService<LocalWorkspaceOptions>();
+
+        LoadWorkspaceLabels();
     }
 
     protected override async void OnAppearing()
@@ -47,11 +54,32 @@ public partial class DocumentsPage : ContentPage
             }
 
             var processedCount = 0;
+            var importedCount = 0;
+            var duplicateCount = 0;
+            var duplicateNames = new List<string>();
+
             foreach (var file in selectedFiles)
             {
                 ImportStatusLabel.Text = $"Importing {file.FileName} locally...";
+
+                var sourceHash = await _fileHashService.ComputeSha256Async(file.FullPath);
+                var existingDocument = await _documentRepository.FindBySha256HashAsync(sourceHash);
+                var isDuplicate = existingDocument is not null && File.Exists(existingDocument.StoredPath);
+
                 var importedDocument = await _documentImportService.ImportAsync(file.FullPath);
-                if (!string.Equals(importedDocument.OriginalFileName, file.FileName, StringComparison.OrdinalIgnoreCase))
+
+                if (isDuplicate)
+                {
+                    duplicateCount++;
+                    duplicateNames.Add(file.FileName);
+                }
+                else
+                {
+                    importedCount++;
+                }
+
+                if (isDuplicate &&
+                    !string.Equals(importedDocument.OriginalFileName, file.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     ImportStatusLabel.Text = $"{file.FileName} is already imported as {importedDocument.OriginalFileName}. Reused the existing local record.";
                 }
@@ -59,7 +87,7 @@ public partial class DocumentsPage : ContentPage
                 processedCount++;
             }
 
-            ImportStatusLabel.Text = $"Processed {processedCount} PDF file(s). Duplicates reuse existing local records. No files were uploaded.";
+            ImportStatusLabel.Text = BuildImportSummary(processedCount, importedCount, duplicateCount, duplicateNames);
             await RefreshDocumentsAsync();
         }
         catch (Exception ex) when (ex is ArgumentException or FileNotFoundException or NotSupportedException or InvalidDataException)
@@ -70,6 +98,12 @@ public partial class DocumentsPage : ContentPage
         {
             ChoosePdfsButton.IsEnabled = true;
         }
+    }
+
+    private async void OnCopyWorkspacePathClicked(object sender, EventArgs e)
+    {
+        await Clipboard.Default.SetTextAsync(_workspaceOptions.WorkspaceRootPath);
+        ImportStatusLabel.Text = "Copied the local workspace path. No document contents were copied.";
     }
 
     private async void OnRefreshClicked(object sender, EventArgs e)
@@ -102,6 +136,32 @@ public partial class DocumentsPage : ContentPage
     {
         var documents = await _documentRepository.ListDocumentsAsync();
         DocumentsCollection.ItemsSource = documents.Select(DocumentListItem.FromDocument).ToList();
+    }
+
+    private void LoadWorkspaceLabels()
+    {
+        WorkspacePathLabel.Text = $"Workspace: {_workspaceOptions.WorkspaceRootPath}";
+        DocumentsPathLabel.Text = $"Document copies: {_workspaceOptions.DocumentsDirectoryPath}";
+        MetadataPathLabel.Text = $"Metadata index: {_workspaceOptions.DocumentMetadataPath}";
+    }
+
+    private static string BuildImportSummary(
+        int processedCount,
+        int importedCount,
+        int duplicateCount,
+        IReadOnlyCollection<string> duplicateNames)
+    {
+        if (duplicateCount == 0)
+        {
+            return $"Imported {importedCount} PDF file(s) into the local workspace. No files were uploaded.";
+        }
+
+        var duplicateSummary = duplicateNames.Count <= 3
+            ? string.Join(", ", duplicateNames)
+            : $"{string.Join(", ", duplicateNames.Take(3))}, and {duplicateNames.Count - 3} more";
+
+        return $"Processed {processedCount} PDF file(s): {importedCount} new, {duplicateCount} already imported. " +
+               $"Reused existing local records for {duplicateSummary}. No files were uploaded.";
     }
 
     private sealed record DocumentListItem(

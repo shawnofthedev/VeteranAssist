@@ -1,6 +1,6 @@
 # SESSION_STATE
 
-Last updated: 2026-05-15
+Last updated: 2026-05-19
 
 ## Project
 
@@ -107,6 +107,9 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 - `DocumentsPage`:
   - Lets user select one or more local PDFs.
   - Imports PDFs through `IDocumentImportService`.
+  - Shows the local workspace root, document-copy directory, and JSON metadata path.
+  - Can copy the local workspace root path to the clipboard without copying document contents.
+  - Pre-checks selected file hashes and summarizes duplicates that reuse existing local records.
   - Lists imported documents from `IDocumentRepository`.
   - Shows page count, extraction status, short hash, and import date.
   - Navigates to document review using Shell route `//document-review`.
@@ -123,12 +126,17 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Supported modes are Light, Dark, and System Default.
   - Startup applies the saved mode through `Application.Current.UserAppTheme`.
   - Settings page includes an Appearance section with a theme picker.
+  - Settings page shows the actual local workspace root, document-copy directory, and metadata index path.
   - Shared styles use theme-aware resources for cards, text, badges, callouts, and related placeholders.
 
 ### Docs
 
 - `README.md` updated for Phase 1 status, privacy statement, non-goals, setup/build/test commands, roadmap, architecture, and screenshots placeholders.
 - `docs/project-setup.md` updated for current solution layout, Phase 1 status, workspace notes, appearance setting, and commands.
+- `docs/roadmap.md` added as the durable phase-by-phase product roadmap. It captures the long-term direction through document intake, OCR, PII/redaction, structured extraction, evidence workspace, prompt building, AI providers, local AI, reporting, and release polish while preserving privacy, user control, provenance, and ethical guardrails.
+- `docs/ai-context/REPO_MAP.md` now includes `docs/roadmap.md`.
+- `docs/adr/README.md` now includes ADR-0008 in the index.
+- `README.md`, `docs/project-setup.md`, `docs/roadmap.md`, and `docs/ai-context/REPO_MAP.md` updated after workspace visibility and duplicate-import UX polish.
 
 ## Tests
 
@@ -162,6 +170,9 @@ Latest verification:
 
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after adding appearance settings.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 21 tests.
+- Documentation-only roadmap update on 2026-05-19; no build or tests run for that change.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after workspace path and duplicate-import UX polish. Existing MAUI compiled-binding warnings remain.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 21 tests after workspace path and duplicate-import UX polish.
 
 Useful commands:
 
@@ -188,22 +199,23 @@ This compile check passed after the latest changes. It may leave generated build
 - Storage is JSON-backed and not encrypted; future work should revisit SQLite and encryption.
 - `ImportDocumentsPage` still exists from earlier work but the active Shell route uses `DocumentsPage`.
 - Appearance preference is low-sensitivity UI state stored with MAUI `Preferences`, not encrypted storage.
+- User roadmap input names .NET 10 as the intended primary stack, but the repo currently targets .NET 9. Treat .NET 10 as a future upgrade task until project files are intentionally changed.
 
 ## Suggested Next Steps
 
 1. Rename `PlaceholderTextExtractionService` to `PdfPigTextExtractionService`.
 2. Add compiled bindings or typed view models for MAUI list templates.
 3. Add a proper document detail route registration if Shell behavior needs refinement.
-4. Add a user-visible local workspace path display.
-5. Add stronger per-file duplicate import UX.
-6. Add local OCR in a later phase only after privacy/security review.
-7. Add encrypted or SQLite-backed storage in a later phase.
-8. Add tests for `DocumentDetailViewModel`.
+4. Add local OCR in a later phase only after privacy/security review.
+5. Add encrypted or SQLite-backed storage in a later phase.
+6. Add tests for `DocumentDetailViewModel`.
+7. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
 
 ## Most Relevant Files
 
 - `README.md`
 - `docs/project-setup.md`
+- `docs/roadmap.md`
 - `AGENTS.md`
 - `src/VeteranEvidenceAssist.Core/Models/VeteranDocument.cs`
 - `src/VeteranEvidenceAssist.Core/Enums/DocumentExtractionStatus.cs`

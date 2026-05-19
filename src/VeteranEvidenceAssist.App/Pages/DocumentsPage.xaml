@@ -26,7 +26,9 @@
                             <Button x:Name="ChoosePdfsButton"
                                     Text="Choose PDFs"
                                     Clicked="OnChoosePdfsClicked" />
-                            <Button Text="Open Local Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
+                            <Button Text="Copy Workspace Path"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnCopyWorkspacePathClicked" />
                             <Label x:Name="ImportStatusLabel"
                                    Text="No import running."
                                    Style="{StaticResource MetaText}" />
@@ -36,9 +38,9 @@
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Local Storage" Style="{StaticResource CardTitle}" />
-                            <Label Text="Workspace: app-managed local data folder" Style="{StaticResource MetaText}" />
-                            <Label Text="Documents: {}{DocumentId} / original.pdf immutable copies" Style="{StaticResource MetaText}" />
-                            <Label Text="Metadata: local JSON index" Style="{StaticResource MetaText}" />
+                            <Label x:Name="WorkspacePathLabel" Style="{StaticResource MetaText}" />
+                            <Label x:Name="DocumentsPathLabel" Style="{StaticResource MetaText}" />
+                            <Label x:Name="MetadataPathLabel" Style="{StaticResource MetaText}" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
