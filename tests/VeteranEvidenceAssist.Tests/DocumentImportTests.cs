@@ -277,6 +277,29 @@ public sealed class DocumentImportTests
     }
 
     [Fact]
+    public async Task Duplicate_pdf_import_with_different_file_name_reuses_existing_local_record_by_hash()
+    {
+        using var workspace = TestWorkspace.Create();
+        var firstSourcePdf = workspace.WriteMinimalPdf("first-name.pdf");
+        var renamedSourcePdf = Path.Combine(workspace.RootPath, "renamed-copy.pdf");
+        File.Copy(firstSourcePdf, renamedSourcePdf);
+        var storage = new JsonLocalStorageService(workspace.Options);
+        var importer = CreateImporter(storage, workspace.Options);
+
+        var firstImport = await importer.ImportAsync(firstSourcePdf);
+        var duplicateImport = await importer.ImportAsync(renamedSourcePdf);
+
+        var documents = await storage.ListDocumentsAsync();
+        var document = Assert.Single(documents);
+        Assert.Equal(firstImport.Id, duplicateImport.Id);
+        Assert.Equal(firstImport.Id, document.Id);
+        Assert.Equal("first-name.pdf", duplicateImport.OriginalFileName);
+        Assert.Equal(firstImport.LocalFilePath, duplicateImport.LocalFilePath);
+        Assert.Equal(firstImport.Sha256Hash, duplicateImport.Sha256Hash);
+        Assert.Single(Directory.EnumerateFiles(workspace.Options.DocumentsDirectoryPath, "original.pdf", SearchOption.AllDirectories));
+    }
+
+    [Fact]
     public async Task Duplicate_hash_with_missing_workspace_file_imports_new_local_record()
     {
         using var workspace = TestWorkspace.Create();

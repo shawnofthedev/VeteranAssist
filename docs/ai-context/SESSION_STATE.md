@@ -145,7 +145,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 
 Current test project: `tests\VeteranEvidenceAssist.Tests`
 
-Current test count observed: 21 passing.
+Current test count observed: 22 passing.
 
 Covered behaviors include:
 
@@ -165,6 +165,7 @@ Covered behaviors include:
 - Blank/no-text PDF creates page metadata without OCR.
 - Blank/no-text PDF status is `OcrNeeded`.
 - Duplicate imports reuse an existing record when the workspace copy still exists.
+- Duplicate imports with a different selected file name still reuse the original local record by matching file hash.
 - Stale duplicate metadata with a missing workspace copy allows a new import.
 - Repository lookup by SHA-256 hash.
 - Synthetic extraction failure cleanup/no partial metadata persistence.
@@ -178,6 +179,7 @@ Latest verification:
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 21 tests after workspace path and duplicate-import UX polish.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after clearer storage/privacy messaging on Documents and Settings pages. Existing MAUI compiled-binding warnings remain.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after adding per-file import results for duplicate-import UX. Existing MAUI compiled-binding warnings remain and now include the new import results list.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after adding duplicate-import service coverage for renamed/copy duplicate PDFs.
 
 Useful commands:
 
