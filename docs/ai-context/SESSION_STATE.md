@@ -112,6 +112,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Pre-checks selected file hashes and summarizes duplicates that reuse existing local records.
   - Shows a latest import results panel with per-file status: new imports, already-imported duplicates, or validation failures.
   - Shows clearer local intake messaging: selected PDFs are copied into app-managed local storage, source files stay unchanged, metadata stays local, and document contents are not uploaded.
+  - Uses typed `x:DataType` bindings for document list and latest import results templates.
   - Lists imported documents from `IDocumentRepository`.
   - Shows page count, extraction status, short hash, and import date.
   - Navigates to document review using Shell route `//document-review`.
@@ -123,6 +124,9 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Shows OCR-needed warning when status is `OcrNeeded`.
   - PDF rendering is still a placeholder.
 - Added `DocumentDetailViewModel` in App for review-page projection.
+- Added `DocumentListItem` and `ImportResultItem` view-model records for typed document list and import result templates.
+- `DocumentReviewPage` extracted text preview uses typed `x:DataType` bindings.
+- Legacy `ImportDocumentsPage` list template also uses typed `x:DataType` bindings while the page remains in the project.
 - Added app appearance settings:
   - `AppearanceSettingsService` persists the selected mode with MAUI `Preferences`.
   - Supported modes are Light, Dark, and System Default.
@@ -183,6 +187,8 @@ Latest verification:
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after adding duplicate-import service coverage for renamed/copy duplicate PDFs.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after renaming `PlaceholderTextExtractionService` to `PdfPigTextExtractionService`. Existing MAUI compiled-binding warnings remain.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after the text extraction service rename.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after adding typed `x:DataType` bindings to MAUI list templates.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after the typed binding cleanup.
 
 Useful commands:
 
@@ -200,7 +206,6 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Known Warnings / Issues
 
-- MAUI XAML compiled-binding warnings remain for CollectionView templates because `x:DataType` is not set.
 - The app may lock output DLLs while running, causing normal solution builds to fail until the app is closed.
 - PDF page rendering is not implemented; Document Review uses a placeholder viewer.
 - OCR is intentionally not implemented.
@@ -212,13 +217,12 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Suggested Next Steps
 
-1. Add compiled bindings or typed view models for MAUI list templates.
-2. Add a proper document detail route registration if Shell behavior needs refinement.
-3. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
-4. Add local OCR in a later phase only after privacy/security review.
-5. Add encrypted or SQLite-backed storage in a later phase.
-6. Add tests for `DocumentDetailViewModel`.
-7. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
+1. Add a proper document detail route registration if Shell behavior needs refinement.
+2. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
+3. Add local OCR in a later phase only after privacy/security review.
+4. Add encrypted or SQLite-backed storage in a later phase.
+5. Add tests for `DocumentDetailViewModel`.
+6. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
 
 ## Most Relevant Files
 
@@ -243,4 +247,6 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.App/Services/AppearanceSettingsService.cs`
 - `src/VeteranEvidenceAssist.App/Resources/Styles/Styles.xaml`
 - `src/VeteranEvidenceAssist.App/ViewModels/DocumentDetailViewModel.cs`
+- `src/VeteranEvidenceAssist.App/ViewModels/DocumentListItem.cs`
+- `src/VeteranEvidenceAssist.App/ViewModels/ImportResultItem.cs`
 - `tests/VeteranEvidenceAssist.Tests/DocumentImportTests.cs`

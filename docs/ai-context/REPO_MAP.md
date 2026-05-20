@@ -138,6 +138,8 @@ Current active document intake flow:
 - `DocumentReviewPage.xaml`
 - `DocumentReviewPage.xaml.cs`
 - `ViewModels/DocumentDetailViewModel.cs`
+- `ViewModels/DocumentListItem.cs`
+- `ViewModels/ImportResultItem.cs`
 - `Services/AppearanceSettingsService.cs`
 
 Settings:
@@ -150,6 +152,7 @@ Settings:
 Notes:
 
 - `ImportDocumentsPage` still exists from earlier work, but the active Shell route uses `DocumentsPage`.
+- CollectionView templates on active review/import pages use typed `x:DataType` bindings.
 - PDF rendering is still a placeholder.
 - Do not put PDF parsing, OCR, redaction, or AI provider logic in the App project.
 
@@ -511,7 +514,6 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 
 ## Current Known Issues
 
-- MAUI compiled-binding warnings remain for CollectionView templates.
 - Running MAUI app can lock build output DLLs.
 - PDF page rendering is still a placeholder.
 - OCR is deferred.
@@ -523,5 +525,4 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 
 - Add tests for `DocumentDetailViewModel`.
 - Rename placeholder services to production names.
-- Add typed `x:DataType` bindings to reduce MAUI warnings.
 - Add local OCR only after privacy/performance design review.

@@ -1,14 +1,11 @@
 using VeteranEvidenceAssist.Core.Interfaces;
-using VeteranEvidenceAssist.Core.Models;
-using VeteranEvidenceAssist.Core.Enums;
 using VeteranEvidenceAssist.Core.Options;
+using VeteranEvidenceAssist.App.ViewModels;
 
 namespace VeteranEvidenceAssist.App.Pages;
 
 public partial class DocumentsPage : ContentPage
 {
-    private const int ShortHashLength = 12;
-
     private readonly IDocumentImportService _documentImportService;
     private readonly IDocumentRepository _documentRepository;
     private readonly IFileHashService _fileHashService;
@@ -175,68 +172,4 @@ public partial class DocumentsPage : ContentPage
                $"Reused existing local records for {duplicateSummary}. No files were uploaded.";
     }
 
-    private sealed record DocumentListItem(
-        Guid Id,
-        string OriginalFileName,
-        int PageCount,
-        string TextStatus,
-        string ShortHash,
-        string ImportedAtDisplay)
-    {
-        public static DocumentListItem FromDocument(VeteranDocument document)
-        {
-            var textBlockCount = document.Pages.Sum(page => page.TextBlocks.Count);
-
-            return new DocumentListItem(
-                document.Id,
-                document.OriginalFileName,
-                document.Pages.Count,
-                ToDisplayStatus(document, textBlockCount),
-                ToShortHash(document.Sha256Hash),
-                document.ImportedAt.ToLocalTime().ToString("g"));
-        }
-
-        private static string ToDisplayStatus(VeteranDocument document, int textBlockCount)
-        {
-            return document.ExtractionStatus switch
-            {
-                DocumentExtractionStatus.EmbeddedTextExtracted => "Embedded",
-                DocumentExtractionStatus.OcrNeeded => "OCR needed",
-                DocumentExtractionStatus.NoTextFound => "No text",
-                DocumentExtractionStatus.ExtractionFailed => "Failed",
-                _ => textBlockCount > 0 ? "Embedded" : "Unknown"
-            };
-        }
-    }
-
-    private sealed record ImportResultItem(string Status, string FileName, string Detail)
-    {
-        public static ImportResultItem Imported(string selectedFileName, VeteranDocument document)
-        {
-            return new ImportResultItem(
-                "New",
-                selectedFileName,
-                $"Copied into local workspace as {document.OriginalFileName}. Hash {ToShortHash(document.Sha256Hash)}.");
-        }
-
-        public static ImportResultItem Duplicate(string selectedFileName, VeteranDocument document)
-        {
-            return new ImportResultItem(
-                "Already imported",
-                selectedFileName,
-                $"Reused existing local record {document.OriginalFileName}. Hash {ToShortHash(document.Sha256Hash)}.");
-        }
-
-        public static ImportResultItem Failed(string selectedFileName, string detail)
-        {
-            return new ImportResultItem("Needs attention", selectedFileName, detail);
-        }
-    }
-
-    private static string ToShortHash(string sha256Hash)
-    {
-        return sha256Hash.Length > ShortHashLength
-            ? sha256Hash[..ShortHashLength]
-            : sha256Hash;
-    }
 }

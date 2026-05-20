@@ -57,7 +57,6 @@ Goals:
 Near-term work:
 
 - Continue polishing settings and theme behavior.
-- Add compiled bindings or typed view models for MAUI templates.
 - Display local workspace path and privacy status clearly.
 
 ## Phase 1 - Document Intake System
@@ -248,8 +247,7 @@ Priority order:
 
 ## Next Recommended Focus
 
-1. Rename placeholder document/text extraction services to production names where behavior is now real.
-2. Add compiled bindings or typed view models for MAUI list templates.
-3. Design local OCR architecture before adding OCR dependencies.
-4. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
-5. Keep AI provider work behind explicit preview and approval workflows.
+1. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
+2. Design local OCR architecture before adding OCR dependencies.
+3. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
+4. Keep AI provider work behind explicit preview and approval workflows.
