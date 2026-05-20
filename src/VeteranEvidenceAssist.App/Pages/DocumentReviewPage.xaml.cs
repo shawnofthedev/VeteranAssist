@@ -21,11 +21,14 @@ public partial class DocumentReviewPage : ContentPage, IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue("documentId", out var value) &&
+        if (query.TryGetValue(AppShell.DocumentIdQueryKey, out var value) &&
             Guid.TryParse(value?.ToString(), out var documentId))
         {
             _documentId = documentId;
+            return;
         }
+
+        _documentId = null;
     }
 
     protected override async void OnAppearing()

@@ -151,6 +151,7 @@ Settings:
 
 Notes:
 
+- `AppShell.xaml.cs` owns route/query constants for document review navigation.
 - `ImportDocumentsPage` still exists from earlier work, but the active Shell route uses `DocumentsPage`.
 - CollectionView templates on active review/import pages use typed `x:DataType` bindings.
 - PDF rendering is still a placeholder.
@@ -231,7 +232,7 @@ Responsibility:
 Important files:
 
 ```text
-Services/PlaceholderDocumentImportService.cs
+Services/LocalDocumentImportService.cs
 Services/PdfPigTextExtractionService.cs
 VeteranEvidenceAssist.Documents.csproj
 ```
@@ -252,7 +253,7 @@ Current behavior:
 
 Note:
 
-`LocalDocumentImportService` is the active import service. `PlaceholderDocumentImportService` remains as a compatibility wrapper in the same file. `PdfPigTextExtractionService` performs real embedded PDF text extraction only; OCR remains deferred.
+`LocalDocumentImportService` is the active import service. `PdfPigTextExtractionService` performs real embedded PDF text extraction only; OCR remains deferred.
 
 ## Storage Project
 
@@ -480,7 +481,7 @@ Flow:
 
 ```text
 User selects imported document
-  -> Shell navigates to document-review with documentId
+  -> Shell navigates to document review through AppShell route/query constants
   -> Load document metadata from IDocumentRepository
   -> Project to DocumentDetailViewModel
   -> Show file details, hash, page count, extraction status, OCR warning, text preview
@@ -519,10 +520,9 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 - OCR is deferred.
 - Redaction and export are placeholders.
 - JSON metadata is not final storage.
-- Placeholder service names should be cleaned up.
+- Remaining placeholder services are in later-phase Redaction, AI, and Security areas.
 
 ## Safe Places To Extend Next
 
 - Add tests for `DocumentDetailViewModel`.
-- Rename placeholder services to production names.
 - Add local OCR only after privacy/performance design review.

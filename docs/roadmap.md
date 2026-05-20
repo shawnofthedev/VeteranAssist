@@ -247,7 +247,6 @@ Priority order:
 
 ## Next Recommended Focus
 
-1. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
-2. Design local OCR architecture before adding OCR dependencies.
-3. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
-4. Keep AI provider work behind explicit preview and approval workflows.
+1. Design local OCR architecture before adding OCR dependencies.
+2. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
+3. Keep AI provider work behind explicit preview and approval workflows.

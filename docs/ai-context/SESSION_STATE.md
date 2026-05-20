@@ -70,7 +70,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 
 ### Documents
 
-- `LocalDocumentImportService` performs the real Phase 1 local import work. `PlaceholderDocumentImportService` remains as a compatibility wrapper.
+- `LocalDocumentImportService` performs the real Phase 1 local import work.
 - Import behavior:
   - Validates PDF path.
   - Copies PDF into local workspace under `AppData/Documents/{DocumentId}/original.pdf`.
@@ -115,10 +115,11 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Uses typed `x:DataType` bindings for document list and latest import results templates.
   - Lists imported documents from `IDocumentRepository`.
   - Shows page count, extraction status, short hash, and import date.
-  - Navigates to document review using Shell route `//document-review`.
+  - Navigates to document review using centralized Shell route constants from `AppShell`.
   - Navigation failures are caught and shown as a safe status message.
 - `DocumentReviewPage`:
   - Loads selected document by `documentId`.
+  - Reads the selected document query key from `AppShell.DocumentIdQueryKey` and resets to the default review state when opened without a valid query.
   - Shows file name, import date, short hash, page count, extraction status.
   - Shows extracted text preview grouped by source page.
   - Shows OCR-needed warning when status is `OcrNeeded`.
@@ -145,6 +146,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 - `docs/adr/README.md` now includes ADR-0008 in the index.
 - `README.md`, `docs/project-setup.md`, `docs/roadmap.md`, and `docs/ai-context/REPO_MAP.md` updated after workspace visibility and duplicate-import UX polish.
 - Renamed `PlaceholderTextExtractionService` to `PdfPigTextExtractionService` in code, DI registration, tests, and continuity docs.
+- Removed the unused `PlaceholderDocumentImportService` compatibility wrapper and renamed its file to `LocalDocumentImportService.cs`.
 
 ## Tests
 
@@ -189,6 +191,10 @@ Latest verification:
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after the text extraction service rename.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after adding typed `x:DataType` bindings to MAUI list templates.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after the typed binding cleanup.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after removing the unused `PlaceholderDocumentImportService` wrapper.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after removing the unused `PlaceholderDocumentImportService` wrapper. An initial parallel app-build/test run hit a transient locked intermediate DLL, then the app build passed when rerun by itself.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after centralizing document-review route/query constants.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after centralizing document-review route/query constants.
 
 Useful commands:
 
@@ -217,12 +223,10 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Suggested Next Steps
 
-1. Add a proper document detail route registration if Shell behavior needs refinement.
-2. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
-3. Add local OCR in a later phase only after privacy/security review.
-4. Add encrypted or SQLite-backed storage in a later phase.
-5. Add tests for `DocumentDetailViewModel`.
-6. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
+1. Add local OCR in a later phase only after privacy/security review.
+2. Add encrypted or SQLite-backed storage in a later phase.
+3. Add tests for `DocumentDetailViewModel`.
+4. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
 
 ## Most Relevant Files
 
@@ -234,7 +238,7 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.Core/Enums/DocumentExtractionStatus.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IFileHashService.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IDocumentRepository.cs`
-- `src/VeteranEvidenceAssist.Documents/Services/PlaceholderDocumentImportService.cs`
+- `src/VeteranEvidenceAssist.Documents/Services/LocalDocumentImportService.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/PdfPigTextExtractionService.cs`
 - `src/VeteranEvidenceAssist.Storage/Repositories/JsonLocalStorageService.cs`
 - `src/VeteranEvidenceAssist.Security/Services/Sha256FileHashService.cs`

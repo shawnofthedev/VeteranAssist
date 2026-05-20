@@ -129,9 +129,9 @@ public partial class DocumentsPage : ContentPage
         try
         {
             DocumentsCollection.SelectedItem = null;
-            await Shell.Current.GoToAsync("//document-review", new Dictionary<string, object>
+            await Shell.Current.GoToAsync(AppShell.DocumentReviewAbsoluteRoute, new Dictionary<string, object>
             {
-                ["documentId"] = selectedDocument.Id.ToString()
+                [AppShell.DocumentIdQueryKey] = selectedDocument.Id.ToString()
             });
         }
         catch (Exception)

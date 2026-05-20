@@ -185,15 +185,3 @@ public class LocalDocumentImportService : IDocumentImportService
         return DocumentType.Unknown;
     }
 }
-
-public sealed class PlaceholderDocumentImportService : LocalDocumentImportService
-{
-    public PlaceholderDocumentImportService(
-        IDocumentRepository documentRepository,
-        ITextExtractionService textExtractionService,
-        IFileHashService fileHashService,
-        LocalWorkspaceOptions workspaceOptions)
-        : base(documentRepository, textExtractionService, fileHashService, workspaceOptions)
-    {
-    }
-}
