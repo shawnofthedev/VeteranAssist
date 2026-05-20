@@ -7,6 +7,8 @@ namespace VeteranEvidenceAssist.App.Pages;
 
 public partial class DocumentsPage : ContentPage
 {
+    private const int ShortHashLength = 12;
+
     private readonly IDocumentImportService _documentImportService;
     private readonly IDocumentRepository _documentRepository;
     private readonly IFileHashService _fileHashService;
@@ -25,6 +27,7 @@ public partial class DocumentsPage : ContentPage
         _workspaceOptions = services.GetRequiredService<LocalWorkspaceOptions>();
 
         LoadWorkspaceLabels();
+        ImportResultsCollection.ItemsSource = Array.Empty<ImportResultItem>();
     }
 
     protected override async void OnAppearing()
@@ -57,6 +60,7 @@ public partial class DocumentsPage : ContentPage
             var importedCount = 0;
             var duplicateCount = 0;
             var duplicateNames = new List<string>();
+            var importResults = new List<ImportResultItem>();
 
             foreach (var file in selectedFiles)
             {
@@ -72,10 +76,12 @@ public partial class DocumentsPage : ContentPage
                 {
                     duplicateCount++;
                     duplicateNames.Add(file.FileName);
+                    importResults.Add(ImportResultItem.Duplicate(file.FileName, importedDocument));
                 }
                 else
                 {
                     importedCount++;
+                    importResults.Add(ImportResultItem.Imported(file.FileName, importedDocument));
                 }
 
                 if (isDuplicate &&
@@ -88,11 +94,16 @@ public partial class DocumentsPage : ContentPage
             }
 
             ImportStatusLabel.Text = BuildImportSummary(processedCount, importedCount, duplicateCount, duplicateNames);
+            ImportResultsCollection.ItemsSource = importResults;
             await RefreshDocumentsAsync();
         }
         catch (Exception ex) when (ex is ArgumentException or FileNotFoundException or NotSupportedException or InvalidDataException)
         {
             ImportStatusLabel.Text = ex.Message;
+            ImportResultsCollection.ItemsSource = new[]
+            {
+                ImportResultItem.Failed("Import stopped", ex.Message)
+            };
         }
         finally
         {
@@ -175,16 +186,13 @@ public partial class DocumentsPage : ContentPage
         public static DocumentListItem FromDocument(VeteranDocument document)
         {
             var textBlockCount = document.Pages.Sum(page => page.TextBlocks.Count);
-            var shortHash = document.Sha256Hash.Length > 12
-                ? document.Sha256Hash[..12]
-                : document.Sha256Hash;
 
             return new DocumentListItem(
                 document.Id,
                 document.OriginalFileName,
                 document.Pages.Count,
                 ToDisplayStatus(document, textBlockCount),
-                shortHash,
+                ToShortHash(document.Sha256Hash),
                 document.ImportedAt.ToLocalTime().ToString("g"));
         }
 
@@ -199,5 +207,36 @@ public partial class DocumentsPage : ContentPage
                 _ => textBlockCount > 0 ? "Embedded" : "Unknown"
             };
         }
+    }
+
+    private sealed record ImportResultItem(string Status, string FileName, string Detail)
+    {
+        public static ImportResultItem Imported(string selectedFileName, VeteranDocument document)
+        {
+            return new ImportResultItem(
+                "New",
+                selectedFileName,
+                $"Copied into local workspace as {document.OriginalFileName}. Hash {ToShortHash(document.Sha256Hash)}.");
+        }
+
+        public static ImportResultItem Duplicate(string selectedFileName, VeteranDocument document)
+        {
+            return new ImportResultItem(
+                "Already imported",
+                selectedFileName,
+                $"Reused existing local record {document.OriginalFileName}. Hash {ToShortHash(document.Sha256Hash)}.");
+        }
+
+        public static ImportResultItem Failed(string selectedFileName, string detail)
+        {
+            return new ImportResultItem("Needs attention", selectedFileName, detail);
+        }
+    }
+
+    private static string ToShortHash(string sha256Hash)
+    {
+        return sha256Hash.Length > ShortHashLength
+            ? sha256Hash[..ShortHashLength]
+            : sha256Hash;
     }
 }

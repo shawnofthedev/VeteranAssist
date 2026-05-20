@@ -15,12 +15,17 @@
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Local Workspace" Style="{StaticResource SectionTitle}" />
-                        <Label Text="Storage location" Style="{StaticResource MetaText}" />
+                        <Border Style="{StaticResource StatusBadge}" HorizontalOptions="Start">
+                            <Label Text="Local files only" Style="{StaticResource MetaText}" />
+                        </Border>
+                        <Label Text="This is the app-managed storage root for imported copies and metadata. Original source files are not moved or edited."
+                               Style="{StaticResource MetaText}" />
+                        <Label Text="Workspace root" Style="{StaticResource MetaText}" />
                         <Entry x:Name="WorkspacePathEntry" IsReadOnly="True" />
                         <Button Text="Change Workspace" Style="{StaticResource SecondaryButton}" IsEnabled="False" />
                         <Label x:Name="DocumentsPathLabel" Style="{StaticResource MetaText}" />
                         <Label x:Name="MetadataPathLabel" Style="{StaticResource MetaText}" />
-                        <Label Text="Imported originals remain unchanged. The app stores managed copies and metadata in this local workspace."
+                        <Label Text="Cloud upload is off by design in the current phase. Future external AI features must show the exact outgoing payload and require approval first."
                                Style="{StaticResource MetaText}" />
                     </VerticalStackLayout>
                 </Border>
@@ -28,6 +33,8 @@
                 <Border Grid.Column="1" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Privacy &amp; Security" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Current import behavior is local-first: preserve originals, store managed copies locally, and require review before any future external transmission."
+                               Style="{StaticResource MetaText}" />
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Text="Require review before external transmission" Style="{StaticResource MetaText}" />
                             <Switch Grid.Column="1" IsToggled="True" IsEnabled="False" />

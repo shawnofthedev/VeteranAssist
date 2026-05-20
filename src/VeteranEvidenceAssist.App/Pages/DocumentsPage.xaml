@@ -12,8 +12,11 @@
             </VerticalStackLayout>
 
             <Border Style="{StaticResource InfoCallout}">
-                <Label Text="Choose PDFs from this device. Originals are never modified; imported copies and metadata stay in the local workspace."
-                       LineBreakMode="WordWrap" />
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Local intake status" Style="{StaticResource CardTitle}" />
+                    <Label Text="Choose PDFs from this device. VeteranEvidenceAssist copies each selected PDF into the local workspace, leaves the original file untouched, stores metadata locally, and does not upload document contents."
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
             </Border>
 
             <Grid ColumnDefinitions="1.3*,2*" ColumnSpacing="18">
@@ -21,7 +24,7 @@
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="12">
                             <Label Text="Import Documents" Style="{StaticResource SectionTitle}" />
-                            <Label Text="Choose PDFs from this device. Originals remain unchanged and are copied into the local workspace."
+                            <Label Text="Selected PDFs are copied into app-managed local storage. The source files stay where they are and are not edited."
                                    Style="{StaticResource MetaText}" />
                             <Button x:Name="ChoosePdfsButton"
                                     Text="Choose PDFs"
@@ -32,15 +35,45 @@
                             <Label x:Name="ImportStatusLabel"
                                    Text="No import running."
                                    Style="{StaticResource MetaText}" />
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Latest Import Results" Style="{StaticResource CardTitle}" />
+                                <CollectionView x:Name="ImportResultsCollection"
+                                                HeightRequest="150"
+                                                EmptyView="No import results yet.">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,*"
+                                                  ColumnSpacing="10"
+                                                  Padding="0,6">
+                                                <Border Style="{StaticResource StatusBadge}"
+                                                        HorizontalOptions="Start">
+                                                    <Label Text="{Binding Status}" Style="{StaticResource MetaText}" />
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                    <Label Text="{Binding FileName}" Style="{StaticResource CardTitle}" />
+                                                    <Label Text="{Binding Detail}" Style="{StaticResource MetaText}" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Local Storage" Style="{StaticResource CardTitle}" />
+                            <Border Style="{StaticResource StatusBadge}" HorizontalOptions="Start">
+                                <Label Text="Device only" Style="{StaticResource MetaText}" />
+                            </Border>
+                            <Label Text="Imported PDF copies and document metadata are stored below. Paths may contain user or device names, so review them before sharing screenshots."
+                                   Style="{StaticResource MetaText}" />
                             <Label x:Name="WorkspacePathLabel" Style="{StaticResource MetaText}" />
                             <Label x:Name="DocumentsPathLabel" Style="{StaticResource MetaText}" />
                             <Label x:Name="MetadataPathLabel" Style="{StaticResource MetaText}" />
+                            <Label Text="Cloud AI transmission is not implemented in this phase."
+                                   Style="{StaticResource MetaText}" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

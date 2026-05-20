@@ -110,6 +110,8 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Shows the local workspace root, document-copy directory, and JSON metadata path.
   - Can copy the local workspace root path to the clipboard without copying document contents.
   - Pre-checks selected file hashes and summarizes duplicates that reuse existing local records.
+  - Shows a latest import results panel with per-file status: new imports, already-imported duplicates, or validation failures.
+  - Shows clearer local intake messaging: selected PDFs are copied into app-managed local storage, source files stay unchanged, metadata stays local, and document contents are not uploaded.
   - Lists imported documents from `IDocumentRepository`.
   - Shows page count, extraction status, short hash, and import date.
   - Navigates to document review using Shell route `//document-review`.
@@ -127,6 +129,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Startup applies the saved mode through `Application.Current.UserAppTheme`.
   - Settings page includes an Appearance section with a theme picker.
   - Settings page shows the actual local workspace root, document-copy directory, and metadata index path.
+  - Settings page explains that workspace paths are app-managed local storage for copies and metadata, originals are not moved or edited, and future external AI must require payload review.
   - Shared styles use theme-aware resources for cards, text, badges, callouts, and related placeholders.
 
 ### Docs
@@ -173,6 +176,8 @@ Latest verification:
 - Documentation-only roadmap update on 2026-05-19; no build or tests run for that change.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after workspace path and duplicate-import UX polish. Existing MAUI compiled-binding warnings remain.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 21 tests after workspace path and duplicate-import UX polish.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after clearer storage/privacy messaging on Documents and Settings pages. Existing MAUI compiled-binding warnings remain.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after adding per-file import results for duplicate-import UX. Existing MAUI compiled-binding warnings remain and now include the new import results list.
 
 Useful commands:
 
