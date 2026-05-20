@@ -26,6 +26,8 @@ The repository currently targets .NET 9 for the Windows-first MAUI MVP. .NET 10 
 
 Implemented capabilities include MAUI Shell navigation, theme selection, local PDF import, workspace copying, SHA-256 hashing, duplicate import reuse, JSON metadata persistence, embedded PDF text extraction through PdfPig, OCR-needed status detection, local document review, and unit tests for the intake pipeline.
 
+Local OCR architecture is documented in ADR-0009. ADR-0010 selects Tesseract as the first planned local OCR engine, but no OCR package has been installed yet. A local OCR service skeleton exists behind `ILocalOcrEngine`.
+
 ## Phase 0 - Foundation and Architecture
 
 Status: mostly complete.
@@ -82,7 +84,7 @@ Supported now:
 
 Not implemented yet:
 
-- OCR.
+- Real OCR engine integration.
 - Image import.
 - Bulk folder monitoring.
 - Encrypted database-backed storage.
@@ -247,6 +249,8 @@ Priority order:
 
 ## Next Recommended Focus
 
-1. Design local OCR architecture before adding OCR dependencies.
-2. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
-3. Keep AI provider work behind explicit preview and approval workflows.
+1. Add PDF page image rendering/conversion for OCR with temporary file cleanup tests.
+2. Spike Tesseract wrapper vs CLI integration before installing the final OCR dependency.
+3. Document `tessdata` storage/configuration before enabling OCR actions.
+4. Start PII detection/redaction only with tests and permanent-redaction validation strategy.
+5. Keep AI provider work behind explicit preview and approval workflows.

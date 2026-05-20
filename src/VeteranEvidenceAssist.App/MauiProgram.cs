@@ -36,7 +36,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDocumentImportService, LocalDocumentImportService>();
         builder.Services.AddSingleton<PdfPigTextExtractionService>();
         builder.Services.AddSingleton<ITextExtractionService>(provider => provider.GetRequiredService<PdfPigTextExtractionService>());
-        builder.Services.AddSingleton<IOcrService>(provider => provider.GetRequiredService<PdfPigTextExtractionService>());
+        builder.Services.AddSingleton<ILocalOcrEngine, NoOpLocalOcrEngine>();
+        builder.Services.AddSingleton<IOcrService, LocalOcrService>();
         builder.Services.AddSingleton<IPiiDetectionService, PlaceholderPiiDetectionService>();
         builder.Services.AddSingleton<IRedactionService, PlaceholderRedactionService>();
         builder.Services.AddSingleton<IEvidenceExtractionService, PlaceholderEvidenceExtractionService>();

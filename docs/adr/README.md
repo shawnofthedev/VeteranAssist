@@ -16,6 +16,8 @@ ADRs are short records of decisions that affect architecture, privacy, security,
 | [ADR-0006](0006-defer-redaction-and-export.md) | Defer redaction and export implementation | Accepted |
 | [ADR-0007](0007-hash-based-duplicate-import-reuse.md) | Hash-based duplicate import reuse | Accepted |
 | [ADR-0008](0008-document-repository-and-workspace-layout.md) | Document repository and workspace layout | Accepted |
+| [ADR-0009](0009-local-ocr-architecture.md) | Local OCR architecture | Accepted |
+| [ADR-0010](0010-tesseract-as-first-local-ocr-engine.md) | Tesseract as first local OCR engine | Accepted |
 
 ## Status Values
 

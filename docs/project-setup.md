@@ -77,6 +77,7 @@ Implemented at this stage:
 - `IDocumentRepository` abstraction for document metadata save/list/get/hash lookup.
 - Embedded PDF text extraction when available.
 - OCR-needed status detection for PDFs with little or no embedded text.
+- Local OCR service skeleton with a no-op engine placeholder.
 - Document detail/review workflow with metadata, extraction status, and extracted text preview.
 - Hash-based duplicate import reuse.
 - User-visible local workspace paths in Documents and Settings.
@@ -117,6 +118,24 @@ AppData/Documents/{DocumentId}/original.pdf
 Phase 1 extraction status is persisted with document metadata. Text-based PDFs are marked as embedded-text extracted, while PDFs with little or no embedded text are marked as OCR-needed. OCR itself is intentionally deferred.
 
 Duplicate imports are handled by SHA-256 hash. If the same file content is already imported and the workspace copy still exists, the existing metadata record is reused.
+
+## Local OCR Architecture Direction
+
+OCR is the next planned document-processing capability, but no OCR dependency is installed yet.
+
+The intended shape is:
+
+- Keep OCR local by default.
+- Keep engine-specific code in `VeteranEvidenceAssist.Documents`.
+- Use Core abstractions such as `IOcrService`, `ITextExtractionService`, `ExtractedTextBlock`, and `TextExtractionMethod.LocalOcr`.
+- Use `LocalOcrService` to normalize OCR engine output and `ILocalOcrEngine` for the swappable concrete engine.
+- Preserve document/page provenance, confidence, extraction timestamps, and bounding boxes where available.
+- Use temporary local page images only when needed and clean them after success or failure.
+- Never log raw OCR text, PII, medical details, or prompt-ready payloads.
+
+See `docs/adr/0009-local-ocr-architecture.md` and `docs/adr/0010-tesseract-as-first-local-ocr-engine.md` before adding an OCR package.
+
+Tesseract is the first planned OCR engine, but it is not installed yet. The next implementation step is PDF page image rendering/conversion with temporary file cleanup tests, followed by a wrapper-vs-CLI spike and `tessdata` configuration design.
 
 ## Solution Creation Reference
 

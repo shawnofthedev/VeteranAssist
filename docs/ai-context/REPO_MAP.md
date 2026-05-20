@@ -65,9 +65,15 @@ docs/adr/
   0006-defer-redaction-and-export.md
   0007-hash-based-duplicate-import-reuse.md
   0008-document-repository-and-workspace-layout.md
+  0009-local-ocr-architecture.md
+  0010-tesseract-as-first-local-ocr-engine.md
 ```
 
 Use ADRs to understand why major decisions were made.
+
+ADR-0009 records the local OCR architecture direction: OCR stays local by default, engine-specific code belongs in Documents, temporary page images must be cleaned up, and OCR text blocks should preserve page provenance, confidence, timestamps, and bounding boxes where available.
+
+ADR-0010 selects Tesseract as the first planned local OCR engine while deferring package installation until PDF page rendering, wrapper-vs-CLI integration, and `tessdata` packaging/configuration are decided.
 
 ## Source Projects
 
@@ -233,6 +239,9 @@ Important files:
 
 ```text
 Services/LocalDocumentImportService.cs
+Services/LocalOcrService.cs
+Services/ILocalOcrEngine.cs
+Services/NoOpLocalOcrEngine.cs
 Services/PdfPigTextExtractionService.cs
 VeteranEvidenceAssist.Documents.csproj
 ```
@@ -250,10 +259,20 @@ Current behavior:
 - Does not OCR.
 - Does not upload anything.
 - `DocumentsPage` pre-checks selected file hashes so the import summary can tell users which selections reused existing local records.
+- `LocalOcrService` exists as an OCR orchestration skeleton behind `IOcrService`.
+- `NoOpLocalOcrEngine` is the default engine placeholder; no real OCR dependency is installed.
+- Tesseract is the first planned OCR engine, but no Tesseract package, binary, or trained data is installed yet.
 
 Note:
 
 `LocalDocumentImportService` is the active import service. `PdfPigTextExtractionService` performs real embedded PDF text extraction only; OCR remains deferred.
+
+Future OCR direction:
+
+- Implement the concrete OCR engine behind `ILocalOcrEngine`.
+- Mark OCR-derived text as `TextExtractionMethod.LocalOcr`.
+- Keep temporary page images in local temp storage and clean them after processing.
+- Do not log raw OCR text or sensitive document contents.
 
 ## Storage Project
 
@@ -413,6 +432,7 @@ Current coverage includes:
 - Duplicate import behavior.
 - Stale duplicate metadata with missing workspace copy.
 - Corrupt PDF cleanup/no partial metadata persistence.
+- Local OCR service skeleton behavior and cancellation.
 
 Run tests:
 
@@ -517,7 +537,7 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 
 - Running MAUI app can lock build output DLLs.
 - PDF page rendering is still a placeholder.
-- OCR is deferred.
+- OCR engine implementation is deferred; only the local OCR service skeleton exists.
 - Redaction and export are placeholders.
 - JSON metadata is not final storage.
 - Remaining placeholder services are in later-phase Redaction, AI, and Security areas.
@@ -525,4 +545,5 @@ dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no
 ## Safe Places To Extend Next
 
 - Add tests for `DocumentDetailViewModel`.
-- Add local OCR only after privacy/performance design review.
+- Select a local OCR engine dependency only after licensing, platform, packaging, and privacy review.
+- Add PDF page image rendering/conversion for OCR with temporary file cleanup tests.

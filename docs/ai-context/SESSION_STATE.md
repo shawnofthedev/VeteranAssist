@@ -85,7 +85,11 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Sets `RequiresOcr` when extraction status is OCR-needed.
   - Cleans up copied workspace file if PDF extraction fails before metadata persistence.
 - `PdfPigTextExtractionService` uses PdfPig for embedded text extraction only.
-- No OCR is implemented.
+- `LocalOcrService` is an OCR orchestration skeleton behind `IOcrService`.
+- `NoOpLocalOcrEngine` is the default OCR engine placeholder; no real OCR engine dependency is installed.
+- `LocalOcrService` normalizes engine output to `TextExtractionMethod.LocalOcr`, forces page provenance to the current `DocumentPage.Id`, trims text, clamps confidence to 0-1, skips blank text, and preserves bounding box/source range metadata.
+- ADR-0009 defines the next OCR architecture direction: OCR stays local by default, engine-specific code belongs in Documents, temporary page images must be cleaned up, and OCR blocks should preserve provenance, confidence, timestamps, and bounding boxes where available.
+- ADR-0010 selects Tesseract as the first planned local OCR engine, while deferring package installation until PDF page rendering, wrapper-vs-CLI integration, and `tessdata` configuration are decided.
 
 ### Storage
 
@@ -147,12 +151,15 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 - `README.md`, `docs/project-setup.md`, `docs/roadmap.md`, and `docs/ai-context/REPO_MAP.md` updated after workspace visibility and duplicate-import UX polish.
 - Renamed `PlaceholderTextExtractionService` to `PdfPigTextExtractionService` in code, DI registration, tests, and continuity docs.
 - Removed the unused `PlaceholderDocumentImportService` compatibility wrapper and renamed its file to `LocalDocumentImportService.cs`.
+- Added `docs/adr/0009-local-ocr-architecture.md` and updated architecture, setup, roadmap, ADR index, repo map, and session state for the local OCR architecture plan. No OCR package or implementation was added.
+- Added local OCR service skeleton (`LocalOcrService`, `ILocalOcrEngine`, `NoOpLocalOcrEngine`) and tests. No OCR package or real OCR engine was added.
+- Added `docs/adr/0010-tesseract-as-first-local-ocr-engine.md` and updated roadmap, project setup, repo map, and session state. Tesseract is selected as the first planned OCR engine, but no package/binary/trained data was installed.
 
 ## Tests
 
 Current test project: `tests\VeteranEvidenceAssist.Tests`
 
-Current test count observed: 22 passing.
+Current test count observed: 25 passing.
 
 Covered behaviors include:
 
@@ -176,6 +183,9 @@ Covered behaviors include:
 - Stale duplicate metadata with a missing workspace copy allows a new import.
 - Repository lookup by SHA-256 hash.
 - Synthetic extraction failure cleanup/no partial metadata persistence.
+- Local OCR no-op engine returns no blocks without modifying the page.
+- Local OCR service normalizes engine blocks to `LocalOcr` with page provenance.
+- Local OCR service propagates cancellation.
 
 Latest verification:
 
@@ -195,6 +205,10 @@ Latest verification:
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after removing the unused `PlaceholderDocumentImportService` wrapper. An initial parallel app-build/test run hit a transient locked intermediate DLL, then the app build passed when rerun by itself.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after centralizing document-review route/query constants.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after centralizing document-review route/query constants.
+- Documentation-only OCR architecture planning update; no build or tests run for that documentation change.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed with 0 warnings after adding the OCR service skeleton. An initial parallel app-build/test run hit a transient locked intermediate DLL, then tests passed when rerun by themselves.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 25 tests after adding the OCR service skeleton.
+- Documentation-only OCR engine selection update; no build or tests run for that documentation change.
 
 Useful commands:
 
@@ -223,22 +237,29 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Suggested Next Steps
 
-1. Add local OCR in a later phase only after privacy/security review.
-2. Add encrypted or SQLite-backed storage in a later phase.
-3. Add tests for `DocumentDetailViewModel`.
-4. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
+1. Add PDF page image rendering/conversion for OCR with temporary file cleanup tests.
+2. Spike Tesseract wrapper vs CLI integration before installing the final OCR dependency.
+3. Document `tessdata` storage/configuration before enabling OCR actions.
+4. Add encrypted or SQLite-backed storage in a later phase.
+5. Add tests for `DocumentDetailViewModel`.
+6. Plan a .NET 10 upgrade after confirming MAUI and dependency readiness.
 
 ## Most Relevant Files
 
 - `README.md`
 - `docs/project-setup.md`
 - `docs/roadmap.md`
+- `docs/adr/0009-local-ocr-architecture.md`
+- `docs/adr/0010-tesseract-as-first-local-ocr-engine.md`
 - `AGENTS.md`
 - `src/VeteranEvidenceAssist.Core/Models/VeteranDocument.cs`
 - `src/VeteranEvidenceAssist.Core/Enums/DocumentExtractionStatus.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IFileHashService.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IDocumentRepository.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/LocalDocumentImportService.cs`
+- `src/VeteranEvidenceAssist.Documents/Services/LocalOcrService.cs`
+- `src/VeteranEvidenceAssist.Documents/Services/ILocalOcrEngine.cs`
+- `src/VeteranEvidenceAssist.Documents/Services/NoOpLocalOcrEngine.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/PdfPigTextExtractionService.cs`
 - `src/VeteranEvidenceAssist.Storage/Repositories/JsonLocalStorageService.cs`
 - `src/VeteranEvidenceAssist.Security/Services/Sha256FileHashService.cs`
@@ -254,3 +275,4 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.App/ViewModels/DocumentListItem.cs`
 - `src/VeteranEvidenceAssist.App/ViewModels/ImportResultItem.cs`
 - `tests/VeteranEvidenceAssist.Tests/DocumentImportTests.cs`
+- `tests/VeteranEvidenceAssist.Tests/LocalOcrServiceTests.cs`

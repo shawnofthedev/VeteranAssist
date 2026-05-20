@@ -7,7 +7,7 @@ using VeteranEvidenceAssist.Core.Models;
 
 namespace VeteranEvidenceAssist.Documents.Services;
 
-public sealed class PdfPigTextExtractionService : ITextExtractionService, IOcrService
+public sealed class PdfPigTextExtractionService : ITextExtractionService
 {
     public Task<IReadOnlyList<ExtractedTextBlock>> ExtractTextAsync(VeteranDocument document, CancellationToken cancellationToken = default)
     {
@@ -58,10 +58,4 @@ public sealed class PdfPigTextExtractionService : ITextExtractionService, IOcrSe
         return Task.FromResult<IReadOnlyList<ExtractedTextBlock>>(blocks);
     }
 
-    public Task<IReadOnlyList<ExtractedTextBlock>> ExtractPageTextAsync(DocumentPage page, CancellationToken cancellationToken = default)
-    {
-        // Phase 1 intentionally does not OCR scanned PDFs. Future OCR must remain local by default.
-        IReadOnlyList<ExtractedTextBlock> blocks = [];
-        return Task.FromResult(blocks);
-    }
 }

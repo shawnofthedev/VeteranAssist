@@ -142,6 +142,13 @@ Potential libraries:
 - Tesseract
 - ImageSharp
 
+OCR direction:
+
+- OCR must run locally by default.
+- OCR engine details stay in the Documents project behind Core abstractions.
+- Temporary page images must be cleaned up after OCR completes or fails.
+- OCR-derived text blocks must use `TextExtractionMethod.LocalOcr` and preserve page provenance, confidence, timestamps, and bounding boxes where available.
+
 ---
 
 ## VeteranEvidenceAssist.Redaction
@@ -212,7 +219,9 @@ Document Import
     ->
 File Validation
     ->
-OCR/Text Extraction
+Embedded Text Extraction
+    ->
+OCR when needed
     ->
 PII Detection
     ->
@@ -262,6 +271,8 @@ Contains:
 - coordinates
 - confidence
 - source page
+- extraction method
+- extraction timestamp
 
 ---
 
@@ -314,11 +325,13 @@ Suggested structure:
 
 ```text
 /data
-    /imports
+    /Documents
     /redacted
     /exports
     /temp
 ```
+
+Current imported PDF copies use `AppData/Documents/{DocumentId}/original.pdf`. Future OCR page images should use temporary local storage and be removed after processing.
 
 ---
 
