@@ -7,7 +7,7 @@ using VeteranEvidenceAssist.Core.Models;
 
 namespace VeteranEvidenceAssist.Documents.Services;
 
-public sealed class PlaceholderTextExtractionService : ITextExtractionService, IOcrService
+public sealed class PdfPigTextExtractionService : ITextExtractionService, IOcrService
 {
     public Task<IReadOnlyList<ExtractedTextBlock>> ExtractTextAsync(VeteranDocument document, CancellationToken cancellationToken = default)
     {

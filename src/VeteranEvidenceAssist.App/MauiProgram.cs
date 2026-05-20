@@ -34,9 +34,9 @@ public static class MauiProgram
         builder.Services.AddSingleton(new LocalWorkspaceOptions { WorkspaceRootPath = workspacePath });
         builder.Services.AddSingleton(new LocalStorageOptions { DatabasePath = databasePath });
         builder.Services.AddSingleton<IDocumentImportService, LocalDocumentImportService>();
-        builder.Services.AddSingleton<PlaceholderTextExtractionService>();
-        builder.Services.AddSingleton<ITextExtractionService>(provider => provider.GetRequiredService<PlaceholderTextExtractionService>());
-        builder.Services.AddSingleton<IOcrService>(provider => provider.GetRequiredService<PlaceholderTextExtractionService>());
+        builder.Services.AddSingleton<PdfPigTextExtractionService>();
+        builder.Services.AddSingleton<ITextExtractionService>(provider => provider.GetRequiredService<PdfPigTextExtractionService>());
+        builder.Services.AddSingleton<IOcrService>(provider => provider.GetRequiredService<PdfPigTextExtractionService>());
         builder.Services.AddSingleton<IPiiDetectionService, PlaceholderPiiDetectionService>();
         builder.Services.AddSingleton<IRedactionService, PlaceholderRedactionService>();
         builder.Services.AddSingleton<IEvidenceExtractionService, PlaceholderEvidenceExtractionService>();

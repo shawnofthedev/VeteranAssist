@@ -362,7 +362,7 @@ public sealed class DocumentImportTests
     {
         return new LocalDocumentImportService(
             storage,
-            new PlaceholderTextExtractionService(),
+            new PdfPigTextExtractionService(),
             new Sha256FileHashService(),
             options);
     }

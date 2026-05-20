@@ -77,14 +77,14 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
   - Leaves original file untouched.
   - Computes SHA-256 hash on the copied file.
   - Reuses an existing metadata record when the selected PDF hash is already imported and the workspace copy still exists.
-  - Extracts embedded text via `PlaceholderTextExtractionService`.
+  - Extracts embedded text via `PdfPigTextExtractionService`.
   - Persists pages and extracted text blocks.
   - Persists extracted text preview and sets extraction status:
     - `EmbeddedTextExtracted` when meaningful embedded text is found.
     - `OcrNeeded` when pages exist but little/no embedded text exists.
   - Sets `RequiresOcr` when extraction status is OCR-needed.
   - Cleans up copied workspace file if PDF extraction fails before metadata persistence.
-- `PlaceholderTextExtractionService` uses PdfPig for embedded text extraction only.
+- `PdfPigTextExtractionService` uses PdfPig for embedded text extraction only.
 - No OCR is implemented.
 
 ### Storage
@@ -140,6 +140,7 @@ Maintain the completed safe local PDF intake milestone and prepare for the next 
 - `docs/ai-context/REPO_MAP.md` now includes `docs/roadmap.md`.
 - `docs/adr/README.md` now includes ADR-0008 in the index.
 - `README.md`, `docs/project-setup.md`, `docs/roadmap.md`, and `docs/ai-context/REPO_MAP.md` updated after workspace visibility and duplicate-import UX polish.
+- Renamed `PlaceholderTextExtractionService` to `PdfPigTextExtractionService` in code, DI registration, tests, and continuity docs.
 
 ## Tests
 
@@ -180,6 +181,8 @@ Latest verification:
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after clearer storage/privacy messaging on Documents and Settings pages. Existing MAUI compiled-binding warnings remain.
 - `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after adding per-file import results for duplicate-import UX. Existing MAUI compiled-binding warnings remain and now include the new import results list.
 - `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after adding duplicate-import service coverage for renamed/copy duplicate PDFs.
+- `dotnet build src\VeteranEvidenceAssist.App\VeteranEvidenceAssist.App.csproj --no-restore -p:OutputPath=bin\Debug\verify\` passed after renaming `PlaceholderTextExtractionService` to `PdfPigTextExtractionService`. Existing MAUI compiled-binding warnings remain.
+- `dotnet test tests\VeteranEvidenceAssist.Tests\VeteranEvidenceAssist.Tests.csproj --no-restore` passed with 22 tests after the text extraction service rename.
 
 Useful commands:
 
@@ -199,7 +202,6 @@ This compile check passed after the latest changes. It may leave generated build
 
 - MAUI XAML compiled-binding warnings remain for CollectionView templates because `x:DataType` is not set.
 - The app may lock output DLLs while running, causing normal solution builds to fail until the app is closed.
-- `PlaceholderTextExtractionService` name is still misleading because it contains real embedded PDF text extraction behavior.
 - PDF page rendering is not implemented; Document Review uses a placeholder viewer.
 - OCR is intentionally not implemented.
 - Redaction/export workflows are still placeholders.
@@ -210,9 +212,9 @@ This compile check passed after the latest changes. It may leave generated build
 
 ## Suggested Next Steps
 
-1. Rename `PlaceholderTextExtractionService` to `PdfPigTextExtractionService`.
-2. Add compiled bindings or typed view models for MAUI list templates.
-3. Add a proper document detail route registration if Shell behavior needs refinement.
+1. Add compiled bindings or typed view models for MAUI list templates.
+2. Add a proper document detail route registration if Shell behavior needs refinement.
+3. Consider renaming/splitting `PlaceholderDocumentImportService` once compatibility needs are clear.
 4. Add local OCR in a later phase only after privacy/security review.
 5. Add encrypted or SQLite-backed storage in a later phase.
 6. Add tests for `DocumentDetailViewModel`.
@@ -229,7 +231,7 @@ This compile check passed after the latest changes. It may leave generated build
 - `src/VeteranEvidenceAssist.Core/Interfaces/IFileHashService.cs`
 - `src/VeteranEvidenceAssist.Core/Interfaces/IDocumentRepository.cs`
 - `src/VeteranEvidenceAssist.Documents/Services/PlaceholderDocumentImportService.cs`
-- `src/VeteranEvidenceAssist.Documents/Services/PlaceholderTextExtractionService.cs`
+- `src/VeteranEvidenceAssist.Documents/Services/PdfPigTextExtractionService.cs`
 - `src/VeteranEvidenceAssist.Storage/Repositories/JsonLocalStorageService.cs`
 - `src/VeteranEvidenceAssist.Security/Services/Sha256FileHashService.cs`
 - `src/VeteranEvidenceAssist.App/Pages/DocumentsPage.xaml`

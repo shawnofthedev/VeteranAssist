@@ -229,7 +229,7 @@ Important files:
 
 ```text
 Services/PlaceholderDocumentImportService.cs
-Services/PlaceholderTextExtractionService.cs
+Services/PdfPigTextExtractionService.cs
 VeteranEvidenceAssist.Documents.csproj
 ```
 
@@ -249,7 +249,7 @@ Current behavior:
 
 Note:
 
-`LocalDocumentImportService` is the active import service. `PlaceholderDocumentImportService` remains as a compatibility wrapper in the same file. `PlaceholderTextExtractionService` should be renamed in a future cleanup.
+`LocalDocumentImportService` is the active import service. `PlaceholderDocumentImportService` remains as a compatibility wrapper in the same file. `PdfPigTextExtractionService` performs real embedded PDF text extraction only; OCR remains deferred.
 
 ## Storage Project
 
